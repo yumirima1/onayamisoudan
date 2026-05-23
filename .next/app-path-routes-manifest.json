@@ -1,0 +1,21 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/about/page": "/about",
+  "/admin/login/page": "/admin/login",
+  "/admin/page": "/admin",
+  "/admin/posts/[id]/page": "/admin/posts/[id]",
+  "/admin/posts/page": "/admin/posts",
+  "/admin/stream/page": "/admin/stream",
+  "/api/ai/draft/route": "/api/ai/draft",
+  "/api/posts/route": "/api/posts",
+  "/guideline/page": "/guideline",
+  "/page": "/",
+  "/privacy/page": "/privacy",
+  "/public/[id]/page": "/public/[id]",
+  "/public/page": "/public",
+  "/robots.txt/route": "/robots.txt",
+  "/sitemap.xml/route": "/sitemap.xml",
+  "/submit/page": "/submit",
+  "/terms/page": "/terms"
+}
