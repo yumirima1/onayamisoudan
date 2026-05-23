@@ -1,42 +1,12 @@
 [
   {
     "route": "/admin/posts/[id]",
-    "firstLoadUncompressedJsBytes": 768894,
+    "firstLoadUncompressedJsBytes": 769027,
     "firstLoadChunkPaths": [
       ".next\\static\\chunks\\2ox5wfi9-v82-.js",
       ".next\\static\\chunks\\449mkd3bopnh0.js",
       ".next\\static\\chunks\\031dg_9khr-9w.js",
-      ".next\\static\\chunks\\37g7zseaspi2k.js",
-      ".next\\static\\chunks\\43f65br610icy.js",
-      ".next\\static\\chunks\\29_06_l3qt2_b.js",
-      ".next\\static\\chunks\\3atm1jaddnn-_.js",
-      ".next\\static\\chunks\\429waxtt2m3gs.js",
-      ".next\\static\\chunks\\turbopack-0xuwiuwp3k3cw.js"
-    ]
-  },
-  {
-    "route": "/admin/posts",
-    "firstLoadUncompressedJsBytes": 763045,
-    "firstLoadChunkPaths": [
-      ".next\\static\\chunks\\2ox5wfi9-v82-.js",
-      ".next\\static\\chunks\\449mkd3bopnh0.js",
-      ".next\\static\\chunks\\0l01rvcwifpnn.js",
-      ".next\\static\\chunks\\37g7zseaspi2k.js",
-      ".next\\static\\chunks\\43f65br610icy.js",
-      ".next\\static\\chunks\\29_06_l3qt2_b.js",
-      ".next\\static\\chunks\\3atm1jaddnn-_.js",
-      ".next\\static\\chunks\\429waxtt2m3gs.js",
-      ".next\\static\\chunks\\turbopack-0xuwiuwp3k3cw.js"
-    ]
-  },
-  {
-    "route": "/admin/stream",
-    "firstLoadUncompressedJsBytes": 760914,
-    "firstLoadChunkPaths": [
-      ".next\\static\\chunks\\2ox5wfi9-v82-.js",
-      ".next\\static\\chunks\\449mkd3bopnh0.js",
-      ".next\\static\\chunks\\1_ssk_y1vnvyr.js",
-      ".next\\static\\chunks\\37g7zseaspi2k.js",
+      ".next\\static\\chunks\\3ar4aosa276e4.js",
       ".next\\static\\chunks\\43f65br610icy.js",
       ".next\\static\\chunks\\29_06_l3qt2_b.js",
       ".next\\static\\chunks\\3atm1jaddnn-_.js",
@@ -46,12 +16,42 @@
   },
   {
     "route": "/admin/login",
-    "firstLoadUncompressedJsBytes": 760814,
+    "firstLoadUncompressedJsBytes": 766924,
     "firstLoadChunkPaths": [
       ".next\\static\\chunks\\2ox5wfi9-v82-.js",
       ".next\\static\\chunks\\449mkd3bopnh0.js",
-      ".next\\static\\chunks\\0t0sm7a6r5rij.js",
-      ".next\\static\\chunks\\37g7zseaspi2k.js",
+      ".next\\static\\chunks\\13nmx29lp1j_r.js",
+      ".next\\static\\chunks\\3ar4aosa276e4.js",
+      ".next\\static\\chunks\\43f65br610icy.js",
+      ".next\\static\\chunks\\29_06_l3qt2_b.js",
+      ".next\\static\\chunks\\3atm1jaddnn-_.js",
+      ".next\\static\\chunks\\429waxtt2m3gs.js",
+      ".next\\static\\chunks\\turbopack-0xuwiuwp3k3cw.js"
+    ]
+  },
+  {
+    "route": "/admin/posts",
+    "firstLoadUncompressedJsBytes": 763178,
+    "firstLoadChunkPaths": [
+      ".next\\static\\chunks\\2ox5wfi9-v82-.js",
+      ".next\\static\\chunks\\449mkd3bopnh0.js",
+      ".next\\static\\chunks\\0l01rvcwifpnn.js",
+      ".next\\static\\chunks\\3ar4aosa276e4.js",
+      ".next\\static\\chunks\\43f65br610icy.js",
+      ".next\\static\\chunks\\29_06_l3qt2_b.js",
+      ".next\\static\\chunks\\3atm1jaddnn-_.js",
+      ".next\\static\\chunks\\429waxtt2m3gs.js",
+      ".next\\static\\chunks\\turbopack-0xuwiuwp3k3cw.js"
+    ]
+  },
+  {
+    "route": "/admin/stream",
+    "firstLoadUncompressedJsBytes": 761047,
+    "firstLoadChunkPaths": [
+      ".next\\static\\chunks\\2ox5wfi9-v82-.js",
+      ".next\\static\\chunks\\449mkd3bopnh0.js",
+      ".next\\static\\chunks\\1_ssk_y1vnvyr.js",
+      ".next\\static\\chunks\\3ar4aosa276e4.js",
       ".next\\static\\chunks\\43f65br610icy.js",
       ".next\\static\\chunks\\29_06_l3qt2_b.js",
       ".next\\static\\chunks\\3atm1jaddnn-_.js",
@@ -61,12 +61,12 @@
   },
   {
     "route": "/admin",
-    "firstLoadUncompressedJsBytes": 760538,
+    "firstLoadUncompressedJsBytes": 760671,
     "firstLoadChunkPaths": [
       ".next\\static\\chunks\\2ox5wfi9-v82-.js",
       ".next\\static\\chunks\\449mkd3bopnh0.js",
       ".next\\static\\chunks\\06cqxnpl63wwm.js",
-      ".next\\static\\chunks\\37g7zseaspi2k.js",
+      ".next\\static\\chunks\\3ar4aosa276e4.js",
       ".next\\static\\chunks\\43f65br610icy.js",
       ".next\\static\\chunks\\29_06_l3qt2_b.js",
       ".next\\static\\chunks\\3atm1jaddnn-_.js",

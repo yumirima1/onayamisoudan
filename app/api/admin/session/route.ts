@@ -33,7 +33,8 @@ async function verifyAdminRequest(request: NextRequest) {
       {
         ok: false,
         code: "missing_token",
-        message: "ログインセッションが見つかりません。"
+        message: "Supabase Auth のログインセッションが見つかりません。",
+        rlsProfileReadable: false
       },
       { status: 401 }
     );
@@ -51,7 +52,8 @@ async function verifyAdminRequest(request: NextRequest) {
         ok: false,
         code: "invalid_token",
         message: "Supabase Auth のユーザー確認に失敗しました。",
-        detail: userError?.message ?? null
+        detail: userError?.message ?? null,
+        rlsProfileReadable: false
       },
       { status: 401 }
     );
@@ -83,6 +85,7 @@ async function verifyAdminRequest(request: NextRequest) {
         userId: user.id,
         message: "admin_profiles の確認中にエラーが発生しました。",
         detail: serviceProfileError.message,
+        rlsProfileReadable: Boolean(rlsProfile),
         rlsWarning
       },
       { status: 500 }
@@ -95,7 +98,8 @@ async function verifyAdminRequest(request: NextRequest) {
         ok: false,
         code: "admin_profile_not_found",
         userId: user.id,
-        message: `admin_profiles にこの id が登録されていません: ${user.id}`,
+        message: `Supabase Auth は成功しましたが、admin_profiles.id = auth.users.id の前提に合う行が見つかりません: ${user.id}`,
+        rlsProfileReadable: Boolean(rlsProfile),
         rlsWarning
       },
       { status: 403 }
@@ -109,6 +113,7 @@ async function verifyAdminRequest(request: NextRequest) {
         code: "admin_profile_inactive",
         userId: user.id,
         message: "管理者アカウントが無効です",
+        rlsProfileReadable: Boolean(rlsProfile),
         rlsWarning
       },
       { status: 403 }

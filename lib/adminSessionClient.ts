@@ -4,12 +4,15 @@ import { supabase } from "@/lib/supabaseClient";
 
 export type AdminSessionResult = {
   ok: boolean;
+  code?: string;
+  status?: number;
   userId?: string;
   profile?: {
     id: string;
     role: string;
     is_active: boolean;
   };
+  rlsProfileReadable?: boolean;
   message?: string;
   detail?: string | null;
   rlsWarning?: string | null;
@@ -24,6 +27,7 @@ export async function verifyAdminSession(): Promise<AdminSessionResult> {
   if (sessionError || !session) {
     return {
       ok: false,
+      code: "client_session_missing",
       message: "ログインセッションが見つかりません。",
       detail: sessionError?.message ?? null
     };
@@ -40,9 +44,12 @@ export async function verifyAdminSession(): Promise<AdminSessionResult> {
   if (!response.ok || !payload?.ok) {
     return {
       ok: false,
+      code: payload?.code,
+      status: response.status,
       userId: payload?.userId,
       message: payload?.message ?? "管理者セッションを確認できませんでした。",
       detail: payload?.detail ?? null,
+      rlsProfileReadable: payload?.rlsProfileReadable ?? false,
       rlsWarning: payload?.rlsWarning ?? null
     };
   }
