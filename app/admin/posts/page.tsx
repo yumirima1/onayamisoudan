@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AdminPostTable } from "@/components/AdminPostTable";
 import { supabase } from "@/lib/supabaseClient";
+import { verifyAdminSession } from "@/lib/adminSessionClient";
 import type { Post } from "@/lib/types";
 
 export default function AdminPostsPage() {
@@ -29,11 +30,10 @@ function AdminPostsContent() {
 
   useEffect(() => {
     async function load() {
-      const {
-        data: { user }
-      } = await supabase.auth.getUser();
+      const adminSession = await verifyAdminSession();
 
-      if (!user) {
+      if (!adminSession.ok) {
+        await supabase.auth.signOut();
         router.push("/admin/login");
         return;
       }

@@ -89,6 +89,12 @@
       "namedRegex": "^/admin/stream(?:/)?$"
     },
     {
+      "page": "/api/admin/session",
+      "regex": "^/api/admin/session(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/session(?:/)?$"
+    },
+    {
       "page": "/api/ai/draft",
       "regex": "^/api/ai/draft(?:/)?$",
       "routeKeys": {},

@@ -7,6 +7,7 @@
   "/admin/posts/[id]/page": "app/admin/posts/[id]/page.js",
   "/admin/posts/page": "app/admin/posts/page.js",
   "/admin/stream/page": "app/admin/stream/page.js",
+  "/api/admin/session/route": "app/api/admin/session/route.js",
   "/api/ai/draft/route": "app/api/ai/draft/route.js",
   "/api/posts/route": "app/api/posts/route.js",
   "/guideline/page": "app/guideline/page.js",

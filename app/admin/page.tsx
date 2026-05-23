@@ -4,22 +4,37 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { verifyAdminSession } from "@/lib/adminSessionClient";
 import type { Post } from "@/lib/types";
 
 export default function AdminPage() {
   const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [diagnostic, setDiagnostic] = useState("");
 
   useEffect(() => {
     async function load() {
-      const {
-        data: { user }
-      } = await supabase.auth.getUser();
+      const adminSession = await verifyAdminSession();
 
-      if (!user) {
+      if (!adminSession.ok) {
+        await supabase.auth.signOut();
         router.push("/admin/login");
         return;
+      }
+
+      const storedDiagnostic = window.sessionStorage.getItem("adminLoginDiagnostic");
+      if (storedDiagnostic) {
+        const parsed = JSON.parse(storedDiagnostic) as { userId?: string; rlsWarning?: string | null };
+        setDiagnostic(
+          [
+            parsed.userId ? `ログイン確認済み auth user.id: ${parsed.userId}` : null,
+            parsed.rlsWarning ? `RLS確認: ${parsed.rlsWarning}` : null
+          ]
+            .filter(Boolean)
+            .join("\n")
+        );
+        window.sessionStorage.removeItem("adminLoginDiagnostic");
       }
 
       const { data } = await supabase
@@ -59,6 +74,11 @@ export default function AdminPage() {
         </div>
       </div>
       {loading ? <p className="mt-8 text-night-muted">読み込み中...</p> : null}
+      {diagnostic ? (
+        <div className="mt-6 whitespace-pre-wrap rounded-lg border border-white/10 bg-night-card p-4 text-sm leading-7 text-night-muted">
+          {diagnostic}
+        </div>
+      ) : null}
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((card) => (
           <Link key={card.label} href={card.href} className="rounded-lg border border-white/10 bg-night-card p-5 hover:border-night-accent/60">

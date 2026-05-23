@@ -7,6 +7,7 @@
   "/admin/posts/[id]/page": "/admin/posts/[id]",
   "/admin/posts/page": "/admin/posts",
   "/admin/stream/page": "/admin/stream",
+  "/api/admin/session/route": "/api/admin/session",
   "/api/ai/draft/route": "/api/ai/draft",
   "/api/posts/route": "/api/posts",
   "/guideline/page": "/guideline",

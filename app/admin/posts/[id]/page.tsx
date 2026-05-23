@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AdminReplyEditor } from "@/components/AdminReplyEditor";
 import { supabase } from "@/lib/supabaseClient";
+import { verifyAdminSession } from "@/lib/adminSessionClient";
 import type { Post, PublicPost } from "@/lib/types";
 
 export default function AdminPostDetailPage({ params }: { params: { id: string } }) {
@@ -14,11 +15,10 @@ export default function AdminPostDetailPage({ params }: { params: { id: string }
 
   useEffect(() => {
     async function load() {
-      const {
-        data: { user }
-      } = await supabase.auth.getUser();
+      const adminSession = await verifyAdminSession();
 
-      if (!user) {
+      if (!adminSession.ok) {
+        await supabase.auth.signOut();
         router.push("/admin/login");
         return;
       }

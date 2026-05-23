@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { verifyAdminSession } from "@/lib/adminSessionClient";
 import type { PublicPost } from "@/lib/types";
 
 export default function AdminStreamPage() {
@@ -14,11 +15,10 @@ export default function AdminStreamPage() {
 
   useEffect(() => {
     async function load() {
-      const {
-        data: { user }
-      } = await supabase.auth.getUser();
+      const adminSession = await verifyAdminSession();
 
-      if (!user) {
+      if (!adminSession.ok) {
+        await supabase.auth.signOut();
         router.push("/admin/login");
         return;
       }
