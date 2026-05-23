@@ -7,10 +7,14 @@ import { verifyAdminSession } from "@/lib/adminSessionClient";
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const [emailInput, setEmailInput] = useState("");
   const [message, setMessage] = useState("");
   const [detail, setDetail] = useState("");
   const [step, setStep] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+
+  const normalizedEmail = emailInput.trim().toLowerCase();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -21,14 +25,20 @@ export default function AdminLoginPage() {
 
     try {
       const formData = new FormData(event.currentTarget);
-      const email = String(formData.get("email") ?? "");
+      const email = String(formData.get("email") ?? "").trim().toLowerCase();
       const password = String(formData.get("password") ?? "");
 
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
-        setMessage("ログインできませんでした。");
-        setDetail(error.message);
+        setMessage("メールアドレスまたはパスワードが違います。");
+        setDetail(
+          [
+            "Supabase Auth のメール/パスワード認証で失敗しました。",
+            "この段階では admin_profiles や RLS はまだ確認していないため、管理者権限設定とは無関係です。",
+            `Supabase Auth: ${error.message}`
+          ].join("\n")
+        );
         return;
       }
 
@@ -80,6 +90,40 @@ export default function AdminLoginPage() {
     }
   }
 
+  async function handlePasswordReset() {
+    setMessage("");
+    setDetail("");
+    setStep("");
+
+    if (!normalizedEmail) {
+      setMessage("パスワード再設定にはメールアドレスを入力してください。");
+      return;
+    }
+
+    setResetLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
+        redirectTo: `${window.location.origin}/admin/login`
+      });
+
+      if (error) {
+        setMessage("パスワード再設定メールを送信できませんでした。");
+        setDetail(`Supabase Auth: ${error.message}`);
+        return;
+      }
+
+      setMessage("パスワード再設定メールを送信しました。");
+      setDetail("入力したメールアドレスに届いたリンクから、Supabase Auth のパスワードを再設定してください。");
+    } catch (unknownError) {
+      const error = unknownError instanceof Error ? unknownError : new Error(String(unknownError));
+      setMessage("パスワード再設定処理中に予期しないエラーが発生しました。");
+      setDetail(error.message);
+    } finally {
+      setResetLoading(false);
+    }
+  }
+
   return (
     <div className="mx-auto max-w-md px-5 py-16">
       <h1 className="text-3xl font-semibold text-night-text">管理者ログイン</h1>
@@ -87,7 +131,14 @@ export default function AdminLoginPage() {
       <form onSubmit={handleSubmit} className="mt-8 space-y-5 rounded-lg border border-white/10 bg-night-card p-6">
         <label className="block space-y-2 text-sm text-night-muted">
           <span>Email</span>
-          <input name="email" type="email" required className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-3 outline-none focus:border-night-accent" />
+          <input
+            name="email"
+            type="email"
+            value={emailInput}
+            onChange={(event) => setEmailInput(event.target.value)}
+            required
+            className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-3 outline-none focus:border-night-accent"
+          />
         </label>
         <label className="block space-y-2 text-sm text-night-muted">
           <span>Password</span>
@@ -96,6 +147,19 @@ export default function AdminLoginPage() {
         <button disabled={loading} className="rounded-md bg-night-accent px-5 py-3 text-sm font-semibold text-white disabled:opacity-60">
           {loading ? "確認中..." : "ログイン"}
         </button>
+        <div className="border-t border-white/10 pt-4">
+          <button
+            type="button"
+            onClick={handlePasswordReset}
+            disabled={loading || resetLoading}
+            className="text-sm font-semibold text-night-accent underline-offset-4 hover:underline disabled:opacity-60"
+          >
+            {resetLoading ? "送信中..." : "パスワードを再設定する"}
+          </button>
+          <p className="mt-2 text-xs leading-5 text-night-muted">
+            入力中のメールアドレスを小文字化して、Supabase Auth の再設定メールを送ります。
+          </p>
+        </div>
         {step ? <p className="text-sm text-night-muted">{step}</p> : null}
         {message ? (
           <div className="rounded-md border border-red-300/30 bg-red-950/20 p-4 text-sm text-red-100">
