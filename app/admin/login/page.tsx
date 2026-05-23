@@ -7,25 +7,56 @@ import { supabase } from "@/lib/supabaseClient";
 export default function AdminLoginPage() {
   const router = useRouter();
   const [message, setMessage] = useState("");
+  const [detail, setDetail] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setMessage("");
+    setDetail("");
 
     const formData = new FormData(event.currentTarget);
     const email = String(formData.get("email") ?? "");
     const password = String(formData.get("password") ?? "");
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-    setLoading(false);
     if (error) {
+      setLoading(false);
       setMessage("ログインできませんでした。");
+      setDetail(error.message);
       return;
     }
 
+    const user = data.user;
+
+    if (!user) {
+      setLoading(false);
+      setMessage("ログイン情報を確認できませんでした。");
+      setDetail("Supabase Auth returned no user after signInWithPassword.");
+      return;
+    }
+
+    const { data: profile, error: profileError } = await supabase
+      .from("admin_profiles")
+      .select("id, role, is_active")
+      .eq("id", user.id)
+      .eq("is_active", true)
+      .single();
+
+    if (profileError || !profile) {
+      await supabase.auth.signOut();
+      setLoading(false);
+      setMessage("管理者権限を確認できませんでした。");
+      setDetail(
+        profileError?.message ??
+          "public.admin_profiles にログインユーザーの id が存在しないか、is_active が false です。"
+      );
+      return;
+    }
+
+    setLoading(false);
     router.push("/admin");
     router.refresh();
   }
@@ -46,7 +77,12 @@ export default function AdminLoginPage() {
         <button disabled={loading} className="rounded-md bg-night-accent px-5 py-3 text-sm font-semibold text-white disabled:opacity-60">
           {loading ? "確認中..." : "ログイン"}
         </button>
-        {message ? <p className="text-sm text-red-200">{message}</p> : null}
+        {message ? (
+          <div className="rounded-md border border-red-300/30 bg-red-950/20 p-4 text-sm text-red-100">
+            <p className="font-semibold">{message}</p>
+            {detail ? <p className="mt-2 break-words text-red-100/80">{detail}</p> : null}
+          </div>
+        ) : null}
       </form>
     </div>
   );
