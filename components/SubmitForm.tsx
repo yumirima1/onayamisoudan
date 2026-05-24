@@ -1,45 +1,52 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { normalizeEmpty, submitPostSchema } from "@/lib/validation";
 
 const ageGroups = ["中学生", "高校生", "大学生", "社会人", "その他", "答えたくない"];
 const categories = ["学校", "人間関係", "家族", "恋愛", "将来", "気分", "ただ聞いてほしい", "その他"];
 
 export function SubmitForm() {
-  const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const formRef = useRef<HTMLFormElement>(null);
+  const [status, setStatus] = useState<"idle" | "done" | "error">("idle");
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [submittedUrgency, setSubmittedUrgency] = useState<"normal" | "soon" | "risky">("normal");
   const [submittedHadEmail, setSubmittedHadEmail] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = event.currentTarget;
-    setStatus("sending");
+    const form = event.currentTarget || formRef.current;
+    setLoading(true);
+    setStatus("idle");
     setMessage("");
 
-    const formData = new FormData(form);
-    const email = normalizeEmpty(String(formData.get("email") ?? ""));
-    const urgency = String(formData.get("urgency") ?? "normal");
-    const parsed = submitPostSchema.safeParse({
-      nickname: normalizeEmpty(String(formData.get("nickname") ?? "")),
-      email,
-      age_group: normalizeEmpty(String(formData.get("age_group") ?? "")),
-      category: String(formData.get("category") ?? ""),
-      title: String(formData.get("title") ?? ""),
-      body: String(formData.get("body") ?? ""),
-      urgency,
-      allow_public: formData.get("allow_public") === "on",
-      allow_stream: formData.get("allow_stream") === "on"
-    });
-
-    if (!parsed.success) {
-      setStatus("error");
-      setMessage("入力内容を確認してください。タイトルは80文字以内、本文は2000文字以内です。");
-      return;
-    }
-
     try {
+      if (!form) {
+        throw new Error("missing_form");
+      }
+
+      const formData = new FormData(form);
+      const email = normalizeEmpty(String(formData.get("email") ?? ""));
+      const urgency = String(formData.get("urgency") ?? "normal");
+      const parsed = submitPostSchema.safeParse({
+        nickname: normalizeEmpty(String(formData.get("nickname") ?? "")),
+        email,
+        age_group: normalizeEmpty(String(formData.get("age_group") ?? "")),
+        category: String(formData.get("category") ?? ""),
+        title: String(formData.get("title") ?? ""),
+        body: String(formData.get("body") ?? ""),
+        urgency,
+        allow_public: formData.get("allow_public") === "on",
+        allow_stream: formData.get("allow_stream") === "on"
+      });
+
+      if (!parsed.success) {
+        setStatus("error");
+        setMessage("入力内容を確認してください。タイトルは80文字以内、本文は2000文字以内です。");
+        return;
+      }
+
       const response = await fetch("/api/posts", {
         method: "POST",
         headers: {
@@ -49,9 +56,7 @@ export function SubmitForm() {
       });
 
       if (!response.ok) {
-        setStatus("error");
-        setMessage("送信できませんでした。少し時間を置いてもう一度お試しください。");
-        return;
+        throw new Error("submit_failed");
       }
 
       form.reset();
@@ -62,6 +67,8 @@ export function SubmitForm() {
     } catch {
       setStatus("error");
       setMessage("送信できませんでした。少し時間を置いてもう一度お試しください。");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -104,7 +111,7 @@ export function SubmitForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 rounded-lg border border-white/10 bg-night-card p-6 shadow-quiet">
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-5 rounded-lg border border-white/10 bg-night-card p-6 shadow-quiet">
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="space-y-2 text-sm text-night-muted">
           <span>ニックネーム 任意</span>
@@ -172,8 +179,8 @@ export function SubmitForm() {
           <span>匿名編集済みの形で配信・紹介の候補にすることを許可します。</span>
         </label>
       </div>
-      <button type="submit" disabled={status === "sending"} className="rounded-md bg-night-accent px-5 py-3 text-sm font-semibold text-white disabled:opacity-60">
-        {status === "sending" ? "送信中..." : "悩みを送る"}
+      <button type="submit" disabled={loading} className="rounded-md bg-night-accent px-5 py-3 text-sm font-semibold text-white disabled:opacity-60">
+        {loading ? "送信中..." : "悩みを送る"}
       </button>
       {message ? <p className={status === "error" ? "text-sm text-red-200" : "text-sm text-emerald-200"}>{message}</p> : null}
     </form>
