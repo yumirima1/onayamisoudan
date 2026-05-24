@@ -6,15 +6,18 @@ const config: Config = {
     extend: {
       colors: {
         night: {
-          background: "#0f1020",
-          card: "#181a2f",
-          accent: "#8b7cf6",
-          text: "#f3f4f6",
-          muted: "#9ca3af"
+          background: "#0d1118",
+          card: "#171c24",
+          paper: "#202631",
+          line: "#303846",
+          accent: "#a9b897",
+          warm: "#d8c8a0",
+          text: "#f5f1e8",
+          muted: "#b3bbc5"
         }
       },
       boxShadow: {
-        quiet: "0 18px 60px rgba(0, 0, 0, 0.25)"
+        quiet: "0 18px 50px rgba(0, 0, 0, 0.22)"
       }
     }
   },

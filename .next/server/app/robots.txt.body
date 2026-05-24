@@ -9,4 +9,4 @@ Allow: /terms
 Disallow: /admin
 Disallow: /admin/
 
-Sitemap: https://onayamisoudan-zi1m.vercel.app/sitemap.xml
+Sitemap: http://localhost:3000/sitemap.xml

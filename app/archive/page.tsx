@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 function excerpt(body: string) {
-  return body.length > 120 ? `${body.slice(0, 120)}...` : body;
+  return body.length > 110 ? `${body.slice(0, 110)}...` : body;
 }
 
 export default async function ArchivePage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
@@ -33,12 +33,13 @@ export default async function ArchivePage({ searchParams }: { searchParams: Prom
   const categories = Array.from(new Set(posts.map((post) => post.category)));
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-12">
+    <div className="mx-auto max-w-5xl px-5 py-10 sm:py-14">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-semibold text-night-text">公開アーカイブ</h1>
-          <p className="mt-3 max-w-2xl leading-8 text-night-muted">
-            投稿者が公開を許可した相談だけを掲載しています。メールアドレスや管理用メモは公開されません。
+          <p className="text-sm font-medium tracking-[0.08em] text-night-warm">公開された手紙</p>
+          <h1 className="mt-3 text-3xl font-semibold text-night-text">公開アーカイブ</h1>
+          <p className="mt-3 max-w-2xl text-base leading-8 text-night-muted">
+            投稿者が公開を許可した相談だけを掲載しています。個人情報や管理用の情報は公開されません。
           </p>
         </div>
         <Suspense fallback={null}>
@@ -46,23 +47,30 @@ export default async function ArchivePage({ searchParams }: { searchParams: Prom
         </Suspense>
       </div>
 
-      {error ? <p className="mt-8 rounded-md border border-red-300/30 bg-red-950/20 p-4 text-sm text-red-100">公開アーカイブを読み込めませんでした。</p> : null}
+      {error ? <p className="mt-8 rounded-lg border border-red-300/30 bg-red-950/20 p-4 text-sm leading-7 text-red-100">公開アーカイブを読み込めませんでした。</p> : null}
 
       <div className="mt-8 grid gap-4 md:grid-cols-2">
         {posts.map((post) => (
-          <Link key={post.id} href={`/archive/${post.id}`} className="block rounded-lg border border-white/10 bg-night-card p-5 transition hover:border-night-accent/60">
-            <div className="flex flex-wrap items-center gap-2 text-xs text-night-muted">
-              <span>{post.category}</span>
+          <Link
+            key={post.id}
+            href={`/archive/${post.id}`}
+            className="block rounded-lg border border-night-line bg-night-card p-5 transition hover:border-night-accent/70 hover:bg-night-paper/70"
+          >
+            <div className="flex flex-wrap items-center gap-2 text-xs leading-6 text-night-muted">
+              <span className="rounded-full border border-night-line bg-night-background/35 px-2.5 py-1">{post.category}</span>
               <span>{new Date(post.created_at).toLocaleDateString("ja-JP")}</span>
               <span>{post.admin_reply ? "返信あり" : "返信待ち"}</span>
             </div>
-            <h2 className="mt-3 text-lg font-semibold text-night-text">{post.title}</h2>
+            <h2 className="mt-4 text-lg font-semibold leading-7 text-night-text">{post.title}</h2>
             <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-night-muted">{excerpt(post.body)}</p>
+            <p className="mt-5 text-sm font-medium text-night-warm">読む</p>
           </Link>
         ))}
       </div>
 
-      {!error && posts.length === 0 ? <p className="mt-10 text-night-muted">公開中の投稿はまだありません。</p> : null}
+      {!error && posts.length === 0 ? (
+        <p className="mt-10 rounded-lg border border-night-line bg-night-card p-5 text-sm leading-7 text-night-muted">公開中の投稿はまだありません。</p>
+      ) : null}
     </div>
   );
 }

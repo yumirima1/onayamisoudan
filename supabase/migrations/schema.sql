@@ -16,7 +16,7 @@ create table if not exists public.posts (
   age_group text,
   category text not null,
   title text not null check (char_length(title) between 1 and 80),
-  body text not null check (char_length(body) between 1 and 2000),
+  body text not null check (char_length(body) between 20 and 2000),
   urgency text not null default 'normal' check (urgency in ('normal', 'soon', 'risky')),
   allow_public boolean not null default false,
   allow_stream boolean not null default false,
@@ -209,7 +209,7 @@ for insert
 to anon, authenticated
 with check (
   char_length(title) between 1 and 80
-  and char_length(body) between 1 and 2000
+  and char_length(body) between 20 and 2000
   and (email is null or char_length(email) <= 254)
   and (reply_token_hash is null or char_length(reply_token_hash) = 64)
   and urgency in ('normal', 'soon', 'risky')

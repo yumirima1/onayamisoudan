@@ -1,11 +1,11 @@
 [
   {
     "route": "/submit",
-    "firstLoadUncompressedJsBytes": 594880,
+    "firstLoadUncompressedJsBytes": 596108,
     "firstLoadChunkPaths": [
       ".next\\static\\chunks\\2ox5wfi9-v82-.js",
       ".next\\static\\chunks\\449mkd3bopnh0.js",
-      ".next\\static\\chunks\\0_dw4uqmpgmyi.js",
+      ".next\\static\\chunks\\2nocj-fntpl0t.js",
       ".next\\static\\chunks\\43f65br610icy.js",
       ".next\\static\\chunks\\29_06_l3qt2_b.js",
       ".next\\static\\chunks\\3atm1jaddnn-_.js",
@@ -15,11 +15,11 @@
   },
   {
     "route": "/admin/posts/[id]",
-    "firstLoadUncompressedJsBytes": 542466,
+    "firstLoadUncompressedJsBytes": 542456,
     "firstLoadChunkPaths": [
       ".next\\static\\chunks\\2ox5wfi9-v82-.js",
       ".next\\static\\chunks\\449mkd3bopnh0.js",
-      ".next\\static\\chunks\\0yckji9sag5kn.js",
+      ".next\\static\\chunks\\1lz5qc86oe908.js",
       ".next\\static\\chunks\\43f65br610icy.js",
       ".next\\static\\chunks\\29_06_l3qt2_b.js",
       ".next\\static\\chunks\\3atm1jaddnn-_.js",
@@ -85,11 +85,11 @@
   },
   {
     "route": "/archive",
-    "firstLoadUncompressedJsBytes": 530490,
+    "firstLoadUncompressedJsBytes": 530674,
     "firstLoadChunkPaths": [
       ".next\\static\\chunks\\2ox5wfi9-v82-.js",
       ".next\\static\\chunks\\449mkd3bopnh0.js",
-      ".next\\static\\chunks\\0143pky-xk8p7.js",
+      ".next\\static\\chunks\\13c9_t118vocr.js",
       ".next\\static\\chunks\\43f65br610icy.js",
       ".next\\static\\chunks\\29_06_l3qt2_b.js",
       ".next\\static\\chunks\\3atm1jaddnn-_.js",
@@ -99,11 +99,11 @@
   },
   {
     "route": "/public",
-    "firstLoadUncompressedJsBytes": 530490,
+    "firstLoadUncompressedJsBytes": 530674,
     "firstLoadChunkPaths": [
       ".next\\static\\chunks\\2ox5wfi9-v82-.js",
       ".next\\static\\chunks\\449mkd3bopnh0.js",
-      ".next\\static\\chunks\\0143pky-xk8p7.js",
+      ".next\\static\\chunks\\13c9_t118vocr.js",
       ".next\\static\\chunks\\43f65br610icy.js",
       ".next\\static\\chunks\\29_06_l3qt2_b.js",
       ".next\\static\\chunks\\3atm1jaddnn-_.js",

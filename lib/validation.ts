@@ -6,10 +6,11 @@ export const submitPostSchema = z.object({
   age_group: z.enum(["中学生", "高校生", "大学生", "社会人", "その他", "答えたくない"]).optional().nullable(),
   category: z.enum(["学校", "人間関係", "家族", "恋愛", "将来", "気分", "ただ聞いてほしい", "その他"]),
   title: z.string().trim().min(1).max(80),
-  body: z.string().trim().min(1).max(2000),
+  body: z.string().trim().min(20).max(2000),
   urgency: z.enum(["normal", "soon", "risky"]),
   allow_public: z.boolean(),
-  allow_stream: z.boolean()
+  allow_stream: z.boolean(),
+  website: z.string().trim().max(0).optional()
 });
 
 export const adminReplySchema = z.object({

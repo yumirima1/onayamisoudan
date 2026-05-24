@@ -5,6 +5,9 @@ import { normalizeEmpty, submitPostSchema } from "@/lib/validation";
 
 const ageGroups = ["中学生", "高校生", "大学生", "社会人", "その他", "答えたくない"];
 const categories = ["学校", "人間関係", "家族", "恋愛", "将来", "気分", "ただ聞いてほしい", "その他"];
+const fieldClass =
+  "w-full rounded-lg border border-night-line/80 bg-night-background/45 px-4 py-3.5 text-base outline-none transition placeholder:text-night-muted/60 focus:border-night-accent focus:bg-night-background/65 focus:ring-2 focus:ring-night-accent/15";
+const labelClass = "space-y-2.5 text-sm leading-6 text-night-muted";
 
 export function SubmitForm() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -39,12 +42,13 @@ export function SubmitForm() {
         body: String(formData.get("body") ?? ""),
         urgency,
         allow_public: formData.get("allow_public") === "on",
-        allow_stream: formData.get("allow_stream") === "on"
+        allow_stream: formData.get("allow_stream") === "on",
+        website: String(formData.get("website") ?? "")
       });
 
       if (!parsed.success) {
         setStatus("error");
-        setMessage("入力内容を確認してください。タイトルは80文字以内、本文は2000文字以内です。");
+        setMessage("入力内容を確認してください。本文は20文字以上、2000文字以内で書いてください。");
         return;
       }
 
@@ -92,27 +96,37 @@ export function SubmitForm() {
 
   if (status === "done") {
     return (
-      <div className="space-y-5 rounded-lg border border-white/10 bg-night-card p-6 shadow-quiet">
-        <h2 className="text-2xl font-semibold text-night-text">投稿を受け取りました</h2>
-        <div className="space-y-3 leading-8 text-night-muted">
+      <div className="space-y-6 rounded-lg border border-night-line bg-night-card p-5 shadow-quiet sm:p-7">
+        <div className="space-y-3">
+          <p className="text-sm text-night-warm">送信が完了しました</p>
+          <h2 className="text-2xl font-semibold leading-tight text-night-text">投稿を受け取りました</h2>
+        </div>
+        <div className="space-y-3 text-[15px] leading-8 text-night-muted">
           <p>書いてくれてありがとうございます。</p>
           <p>返信には時間がかかることがあります。</p>
           <p>この場所は医療・診断・治療ではありません。</p>
           <p>今すぐ危ない場合は、身近な人・学校・地域の相談窓口・緊急窓口に頼ってください。</p>
           <p>返信がついた場合、このURLから確認できます。</p>
         </div>
-        <div className="rounded-lg border border-white/10 bg-black/20 p-4">
-          <p className="break-all text-sm leading-7 text-night-text">{replyUrl}</p>
-          <button onClick={copyReplyUrl} className="mt-4 rounded-md bg-night-accent px-4 py-2 text-sm font-semibold text-white">
+        <div className="rounded-lg border border-night-line bg-night-paper p-4 sm:p-5">
+          <p className="text-sm font-medium text-night-text">返信確認URL</p>
+          <p className="mt-3 break-all rounded-md border border-night-line/70 bg-night-background/45 p-3 text-sm leading-7 text-night-text">
+            {replyUrl}
+          </p>
+          <button
+            type="button"
+            onClick={copyReplyUrl}
+            className="mt-4 rounded-md bg-night-accent px-4 py-2.5 text-sm font-semibold text-night-background transition hover:bg-night-accent/90 focus:outline-none focus:ring-2 focus:ring-night-accent/35"
+          >
             コピーする
           </button>
-          {copyMessage ? <p className="mt-3 text-sm text-night-muted">{copyMessage}</p> : null}
+          {copyMessage ? <p className="mt-3 text-sm leading-6 text-night-muted">{copyMessage}</p> : null}
         </div>
-        <p className="text-sm leading-7 text-night-muted">
+        <p className="rounded-lg border border-night-line/80 bg-night-background/30 p-4 text-sm leading-7 text-night-muted">
           このURLは再表示できません。自分だけが見られる場所に保存してください。
         </p>
         {submittedUrgency === "risky" ? (
-          <div className="rounded-lg border border-red-300/40 bg-red-950/30 p-5 text-red-100">
+          <div className="rounded-lg border border-red-300/35 bg-red-950/25 p-5 text-red-100">
             <h3 className="font-semibold">今すぐの安全を優先してください</h3>
             <p className="mt-2 text-sm leading-7">
               自分や誰かを傷つけそうな時、暴力や危険が迫っている時は、地域の緊急窓口、警察・消防、公的相談窓口、信頼できる身近な人に連絡してください。
@@ -127,7 +141,7 @@ export function SubmitForm() {
             setReplyUrl("");
             setCopyMessage("");
           }}
-          className="rounded-md border border-white/15 px-4 py-2 text-sm text-night-text hover:bg-white/10"
+          className="rounded-md border border-night-line px-4 py-2.5 text-sm text-night-text transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-night-accent/25"
         >
           もう一度投稿する
         </button>
@@ -136,15 +150,19 @@ export function SubmitForm() {
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="space-y-5 rounded-lg border border-white/10 bg-night-card p-6 shadow-quiet">
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-6 rounded-lg border border-night-line bg-night-card p-5 shadow-quiet sm:p-7">
+      <label className="hidden" aria-hidden="true">
+        <span>Web site</span>
+        <input name="website" tabIndex={-1} autoComplete="off" />
+      </label>
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="space-y-2 text-sm text-night-muted">
+        <label className={labelClass}>
           <span>ニックネーム 任意</span>
-          <input name="nickname" maxLength={40} className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-3 outline-none focus:border-night-accent" />
+          <input name="nickname" maxLength={40} className={fieldClass} placeholder="空欄でも大丈夫です" />
         </label>
-        <label className="space-y-2 text-sm text-night-muted">
+        <label className={labelClass}>
           <span>年齢層 任意</span>
-          <select name="age_group" className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-3 outline-none focus:border-night-accent">
+          <select name="age_group" className={fieldClass}>
             <option value="">選択しない</option>
             {ageGroups.map((ageGroup) => (
               <option key={ageGroup} value={ageGroup}>
@@ -154,9 +172,9 @@ export function SubmitForm() {
           </select>
         </label>
       </div>
-      <label className="space-y-2 text-sm text-night-muted">
+      <label className={labelClass}>
         <span>カテゴリ 必須</span>
-        <select name="category" required className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-3 outline-none focus:border-night-accent">
+        <select name="category" required className={fieldClass}>
           <option value="">選択してください</option>
           {categories.map((category) => (
             <option key={category} value={category}>
@@ -165,36 +183,53 @@ export function SubmitForm() {
           ))}
         </select>
       </label>
-      <label className="space-y-2 text-sm text-night-muted">
+      <label className={labelClass}>
         <span>タイトル 必須 80文字以内</span>
-        <input name="title" required maxLength={80} className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-3 outline-none focus:border-night-accent" />
+        <input name="title" required maxLength={80} className={fieldClass} placeholder="短い題名をつけてください" />
       </label>
-      <label className="space-y-2 text-sm text-night-muted">
-        <span>本文 必須 2000文字以内</span>
-        <textarea name="body" required maxLength={2000} rows={10} className="w-full resize-y rounded-md border border-white/10 bg-black/20 px-3 py-3 leading-7 outline-none focus:border-night-accent" />
+      <label className={labelClass}>
+        <span>本文 必須 20文字以上 2000文字以内</span>
+        <textarea
+          name="body"
+          required
+          minLength={20}
+          maxLength={2000}
+          rows={10}
+          className={`${fieldClass} min-h-64 resize-y leading-8`}
+          placeholder="まとまっていなくても大丈夫です。今ある言葉のまま置いてください。"
+        />
       </label>
-      <label className="space-y-2 text-sm text-night-muted">
+      <label className={labelClass}>
         <span>緊急度 必須</span>
-        <select name="urgency" required defaultValue="normal" className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-3 outline-none focus:border-night-accent">
-          <option value="normal">normal</option>
-          <option value="soon">soon</option>
-          <option value="risky">risky</option>
+        <select name="urgency" required defaultValue="normal" className={fieldClass}>
+          <option value="normal">通常</option>
+          <option value="soon">早めに見てほしい</option>
+          <option value="risky">今すぐ危ないかもしれない</option>
         </select>
       </label>
-      <div className="space-y-3 rounded-md border border-white/10 bg-black/10 p-4 text-sm text-night-muted">
+      <div className="space-y-4 rounded-lg border border-night-line/80 bg-night-background/30 p-4 text-sm leading-7 text-night-muted">
         <label className="flex gap-3">
-          <input name="allow_public" type="checkbox" className="mt-1" />
-          <span>匿名編集済みの形で公開アーカイブに使うことを許可します。</span>
+          <input name="allow_public" type="checkbox" className="mt-1 h-4 w-4 accent-night-accent" />
+          <span>匿名編集済みの形で、公開アーカイブに使うことを許可します。</span>
         </label>
         <label className="flex gap-3">
-          <input name="allow_stream" type="checkbox" className="mt-1" />
+          <input name="allow_stream" type="checkbox" className="mt-1 h-4 w-4 accent-night-accent" />
           <span>匿名編集済みの形で配信・紹介の候補にすることを許可します。</span>
         </label>
       </div>
-      <button type="submit" disabled={loading} className="rounded-md bg-night-accent px-5 py-3 text-sm font-semibold text-white disabled:opacity-60">
+      <button
+        type="submit"
+        disabled={loading}
+        aria-busy={loading}
+        className="w-full rounded-lg bg-night-accent px-5 py-4 text-sm font-semibold text-night-background transition hover:bg-night-accent/90 focus:outline-none focus:ring-2 focus:ring-night-accent/35 disabled:cursor-not-allowed disabled:opacity-65 sm:w-auto"
+      >
         {loading ? "送信中..." : "悩みを送る"}
       </button>
-      {message ? <p className={status === "error" ? "text-sm text-red-200" : "text-sm text-emerald-200"}>{message}</p> : null}
+      {message ? (
+        <p className={status === "error" ? "rounded-lg border border-red-300/30 bg-red-950/20 p-4 text-sm leading-7 text-red-100" : "rounded-lg border border-night-accent/30 bg-night-accent/10 p-4 text-sm leading-7 text-night-text"}>
+          {message}
+        </p>
+      ) : null}
     </form>
   );
 }

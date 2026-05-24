@@ -41,28 +41,28 @@ export default async function ArchivePostPage({ params }: { params: Promise<{ id
   const post = data as ArchivePost;
 
   return (
-    <article className="mx-auto max-w-3xl px-5 py-12">
-      <div className="rounded-lg border border-white/10 bg-night-card p-4 text-sm leading-7 text-night-muted">
+    <article className="mx-auto max-w-3xl px-5 py-10 sm:py-14">
+      <div className="rounded-lg border border-night-line bg-night-paper/75 p-4 text-sm leading-7 text-night-muted">
         この場所は医療・診断・治療ではありません。今すぐ危ない場合は、身近な人・学校・地域の相談窓口・緊急窓口に頼ってください。
       </div>
 
-      <div className="mt-8 flex flex-wrap gap-2 text-sm text-night-muted">
-        <span>{post.category}</span>
+      <div className="mt-8 flex flex-wrap items-center gap-2 text-sm text-night-muted">
+        <span className="rounded-full border border-night-line bg-night-paper px-3 py-1 text-xs">{post.category}</span>
         <span>{new Date(post.created_at).toLocaleDateString("ja-JP")}</span>
       </div>
-      <h1 className="mt-4 text-3xl font-semibold leading-tight text-night-text">{post.title}</h1>
+      <h1 className="mt-4 text-3xl font-semibold leading-tight text-night-text sm:text-4xl">{post.title}</h1>
 
-      <section className="mt-8 rounded-lg border border-white/10 bg-night-card p-6">
-        <h2 className="font-semibold text-night-text">投稿</h2>
-        <p className="mt-4 whitespace-pre-wrap leading-8 text-night-muted">{post.body}</p>
+      <section className="mt-8 rounded-lg border border-night-line bg-night-card p-5 sm:p-7">
+        <h2 className="text-sm font-semibold tracking-[0.08em] text-night-warm">投稿本文</h2>
+        <p className="mt-5 whitespace-pre-wrap text-base leading-9 text-night-muted">{post.body}</p>
       </section>
 
-      <section className="mt-6 rounded-lg border border-white/10 bg-night-card p-6">
-        <h2 className="font-semibold text-night-text">返信</h2>
+      <section className="mt-6 rounded-lg border border-night-line bg-night-card p-5 sm:p-7">
+        <h2 className="text-sm font-semibold tracking-[0.08em] text-night-warm">管理者返信</h2>
         {post.admin_reply ? (
-          <p className="mt-4 whitespace-pre-wrap leading-8 text-night-muted">{post.admin_reply}</p>
+          <p className="mt-5 whitespace-pre-wrap text-base leading-9 text-night-muted">{post.admin_reply}</p>
         ) : (
-          <p className="mt-4 leading-8 text-night-muted">まだ返信はありません。返信には時間がかかることがあります。</p>
+          <p className="mt-5 leading-8 text-night-muted">まだ返信はありません。返信には時間がかかることがあります。</p>
         )}
       </section>
     </article>

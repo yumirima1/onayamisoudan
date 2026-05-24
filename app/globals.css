@@ -13,9 +13,10 @@
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(139, 124, 246, 0.14), transparent 32rem),
-    #0f1020;
-  color: #f3f4f6;
+    linear-gradient(180deg, rgba(216, 200, 160, 0.06) 0%, rgba(13, 17, 24, 0) 18rem),
+    linear-gradient(180deg, #0d1118 0%, #111720 52%, #0d1118 100%);
+  color: #f5f1e8;
+  text-rendering: optimizeLegibility;
 }
 
 a {
@@ -26,5 +27,15 @@ a {
 input,
 select,
 textarea {
-  color: #f3f4f6;
+  color: #f5f1e8;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(179, 187, 197, 0.62);
+}
+
+::selection {
+  background: rgba(169, 184, 151, 0.32);
+  color: #f5f1e8;
 }
