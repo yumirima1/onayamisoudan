@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabaseServer";
 import { checkRateLimit } from "@/lib/rateLimit";
+import { createReplyToken, hashReplyToken } from "@/lib/replyToken";
 import { submitPostSchema } from "@/lib/validation";
 
 export async function POST(request: NextRequest) {
@@ -19,7 +20,11 @@ export async function POST(request: NextRequest) {
   }
 
   const supabase = createServerSupabase();
-  const { error } = await supabase.from("posts").insert(parsed.data);
+  const replyToken = createReplyToken();
+  const { error } = await supabase.from("posts").insert({
+    ...parsed.data,
+    reply_token_hash: hashReplyToken(replyToken)
+  });
 
   if (error) {
     return NextResponse.json({ error: "Could not submit post." }, { status: 500 });

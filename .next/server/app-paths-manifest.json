@@ -26,6 +26,7 @@
   "/privacy/page": "app/privacy/page.js",
   "/public/[id]/page": "app/public/[id]/page.js",
   "/public/page": "app/public/page.js",
+  "/reply/[token]/page": "app/reply/[token]/page.js",
   "/robots.txt/route": "app/robots.txt/route.js",
   "/sitemap.xml/route": "app/sitemap.xml/route.js",
   "/submit/page": "app/submit/page.js",

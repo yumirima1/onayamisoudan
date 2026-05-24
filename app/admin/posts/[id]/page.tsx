@@ -72,7 +72,7 @@ export default function AdminPostDetailPage() {
           {post.email ? (
             <>
               <p className="break-all">{post.email}</p>
-              <p>{post.reply_notified_at ? `通知済み: ${new Date(post.reply_notified_at).toLocaleString("ja-JP")}` : "まだ通知していません。"}</p>
+              <p>{post.reply_url_sent_at ?? post.reply_notified_at ? `通知済み: ${new Date(post.reply_url_sent_at ?? post.reply_notified_at ?? "").toLocaleString("ja-JP")}` : "まだ通知していません。"}</p>
             </>
           ) : (
             <p>メールアドレスは未入力です。</p>

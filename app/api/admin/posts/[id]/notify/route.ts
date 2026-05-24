@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminFromRequest } from "@/lib/auth";
 import { sendReplyNotificationEmail } from "@/lib/mail";
+import { createReplyToken, hashReplyToken } from "@/lib/replyToken";
 
 type NotifyPost = {
   id: string;
@@ -55,8 +56,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     });
   }
 
-  // TODO: 非公開投稿の本人限定返信確認URLを追加したら、allow_public=false の通知先をそのURLへ差し替える。
-  const replyUrl = post.allow_public ? `${siteUrl}/archive/${post.id}` : siteUrl;
+  const replyToken = createReplyToken();
+  const replyUrl = `${siteUrl}/reply/${replyToken}`;
   const result = await sendReplyNotificationEmail({
     to: post.email,
     replyUrl
@@ -68,7 +69,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   if (result.sent) {
     const notifiedAt = new Date().toISOString();
-    await auth.serviceClient.from("posts").update({ reply_notified_at: notifiedAt }).eq("id", id);
+    await auth.serviceClient
+      .from("posts")
+      .update({
+        reply_token_hash: hashReplyToken(replyToken),
+        reply_notified_at: notifiedAt,
+        reply_url_sent_at: notifiedAt
+      })
+      .eq("id", id);
 
     return NextResponse.json({
       ok: true,

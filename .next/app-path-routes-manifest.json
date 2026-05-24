@@ -26,6 +26,7 @@
   "/privacy/page": "/privacy",
   "/public/[id]/page": "/public/[id]",
   "/public/page": "/public",
+  "/reply/[token]/page": "/reply/[token]",
   "/robots.txt/route": "/robots.txt",
   "/sitemap.xml/route": "/sitemap.xml",
   "/submit/page": "/submit",

@@ -85,6 +85,14 @@
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/public/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/reply/[token]",
+      "regex": "^/reply/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtoken": "nxtPtoken"
+      },
+      "namedRegex": "^/reply/(?<nxtPtoken>[^/]+?)(?:/)?$"
     }
   ],
   "staticRoutes": [

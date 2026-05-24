@@ -12,6 +12,7 @@ create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),
   nickname text,
   email text check (email is null or char_length(email) <= 254),
+  reply_token_hash text check (reply_token_hash is null or char_length(reply_token_hash) = 64),
   age_group text,
   category text not null,
   title text not null check (char_length(title) between 1 and 80),
@@ -31,7 +32,8 @@ create table if not exists public.posts (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   replied_at timestamptz,
-  reply_notified_at timestamptz
+  reply_notified_at timestamptz,
+  reply_url_sent_at timestamptz
 );
 
 create table if not exists public.public_posts (
@@ -209,6 +211,7 @@ with check (
   char_length(title) between 1 and 80
   and char_length(body) between 1 and 2000
   and (email is null or char_length(email) <= 254)
+  and (reply_token_hash is null or char_length(reply_token_hash) = 64)
   and urgency in ('normal', 'soon', 'risky')
 );
 

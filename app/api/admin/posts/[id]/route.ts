@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdminFromRequest } from "@/lib/auth";
 
 const postDetailSelect =
-  "id, created_at, nickname, email, age_group, category, title, body, urgency, allow_public, allow_stream, admin_reply, admin_memo, public_draft_title, public_draft_body, public_draft_reply, risk_flags, ai_summary, ai_drafts, status, replied_at, reply_notified_at";
+  "id, created_at, nickname, email, age_group, category, title, body, urgency, allow_public, allow_stream, admin_reply, admin_memo, public_draft_title, public_draft_body, public_draft_reply, risk_flags, ai_summary, ai_drafts, status, replied_at, reply_notified_at, reply_url_sent_at";
 
 const publicPostSelect =
   "id, source_post_id, published_at, public_title, public_body, public_reply, category, archive_status, is_stream_used, stream_url";

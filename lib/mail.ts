@@ -38,9 +38,12 @@ export async function sendReplyNotificationEmail({ to, replyUrl }: SendReplyNoti
   const text = [
     "よるの相談箱に返信が届きました。",
     "",
-    "相談内容や返信本文は、このメールには載せていません。",
-    "返信が届きました。サイトでご確認ください。",
-    replyUrl
+    "返信が届きました。以下の専用URLからサイトでご確認ください。",
+    replyUrl,
+    "",
+    "この場所は医療・診断・治療ではありません。",
+    "今すぐ危ない場合は、身近な人・学校・地域の相談窓口・緊急窓口に頼ってください。",
+    "このURLを知っている人は返信を確認できます。他人に共有しないでください。"
   ].join("\n");
 
   const response = await fetch("https://api.resend.com/emails", {

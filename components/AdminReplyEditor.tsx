@@ -19,7 +19,7 @@ export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost:
   const [streamUsed, setStreamUsed] = useState(publicPost?.is_stream_used ?? false);
   const [streamUrl, setStreamUrl] = useState(publicPost?.stream_url ?? "");
   const [status, setStatus] = useState("");
-  const [notifiedAt, setNotifiedAt] = useState(post.reply_notified_at ?? null);
+  const [notifiedAt, setNotifiedAt] = useState(post.reply_url_sent_at ?? post.reply_notified_at ?? null);
   const [draft, setDraft] = useState<DraftResponse | null>(null);
   const [aiEnabled, setAiEnabled] = useState(false);
 
@@ -142,7 +142,7 @@ export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost:
             disabled={!post.email || !adminReply.trim()}
             className="rounded-md border border-white/15 px-4 py-2 text-sm text-night-text hover:bg-white/10 disabled:opacity-50"
           >
-            通知メールを送る
+            返信確認URLをメールで送る
           </button>
         </div>
         <p className="text-xs leading-6 text-night-muted">

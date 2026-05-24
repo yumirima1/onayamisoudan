@@ -25,6 +25,7 @@ export type Post = {
   status: PostStatus;
   replied_at: string | null;
   reply_notified_at?: string | null;
+  reply_url_sent_at?: string | null;
 };
 
 export type PublicPost = {
