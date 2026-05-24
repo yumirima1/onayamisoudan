@@ -4,8 +4,7 @@ import { Suspense } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AdminPostTable } from "@/components/AdminPostTable";
-import { supabase } from "@/lib/supabaseClient";
-import { verifyAdminSession } from "@/lib/adminSessionClient";
+import { adminJsonFetch, verifyAdminSession } from "@/lib/adminSessionClient";
 import type { Post } from "@/lib/types";
 
 export default function AdminPostsPage() {
@@ -33,17 +32,12 @@ function AdminPostsContent() {
       const adminSession = await verifyAdminSession();
 
       if (!adminSession.ok) {
-        await supabase.auth.signOut();
         router.push("/admin/login");
         return;
       }
 
-      const { data } = await supabase
-        .from("posts")
-        .select("id, created_at, nickname, age_group, category, title, body, urgency, allow_public, allow_stream, admin_reply, admin_memo, public_draft_title, public_draft_body, public_draft_reply, risk_flags, ai_summary, ai_drafts, status, replied_at")
-        .order("created_at", { ascending: false });
-
-      setPosts((data ?? []) as Post[]);
+      const data = await adminJsonFetch<{ posts: Post[] }>("/api/admin/posts");
+      setPosts(data.posts);
       setLoading(false);
     }
 

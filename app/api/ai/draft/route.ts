@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAdminFromBearer } from "@/lib/auth";
+import { requireAdminFromRequest } from "@/lib/auth";
 import { generateAdminDraft, isAiEnabled } from "@/lib/ai";
 import { checkRateLimit } from "@/lib/rateLimit";
 
@@ -15,13 +15,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "AI機能は未設定です。" }, { status: 503 });
   }
 
-  const auth = await requireAdminFromBearer(request.headers.get("authorization"));
+  const auth = requireAdminFromRequest(request);
 
   if (!auth.ok) {
-    return NextResponse.json({ error: auth.message }, { status: auth.status });
+    return NextResponse.json({ error: auth.message, code: auth.code }, { status: auth.status });
   }
 
-  const rate = checkRateLimit(auth.user.id, 8, 60 * 1000);
+  const rate = checkRateLimit("admin-ai-draft", 8, 60 * 1000);
   if (!rate.allowed) {
     return NextResponse.json({ error: "Rate limit exceeded." }, { status: 429 });
   }

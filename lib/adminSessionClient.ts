@@ -1,42 +1,15 @@
 "use client";
 
-import { supabase } from "@/lib/supabaseClient";
-
 export type AdminSessionResult = {
   ok: boolean;
   code?: string;
-  status?: number;
-  userId?: string;
-  profile?: {
-    id: string;
-    role: string;
-    is_active: boolean;
-  };
-  rlsProfileReadable?: boolean;
   message?: string;
   detail?: string | null;
-  rlsWarning?: string | null;
 };
 
 export async function verifyAdminSession(): Promise<AdminSessionResult> {
-  const {
-    data: { session },
-    error: sessionError
-  } = await supabase.auth.getSession();
-
-  if (sessionError || !session) {
-    return {
-      ok: false,
-      code: "client_session_missing",
-      message: "ログインセッションが見つかりません。",
-      detail: sessionError?.message ?? null
-    };
-  }
-
   const response = await fetch("/api/admin/session", {
-    headers: {
-      Authorization: `Bearer ${session.access_token}`
-    }
+    credentials: "same-origin"
   });
 
   const payload = (await response.json().catch(() => null)) as AdminSessionResult | null;
@@ -45,14 +18,36 @@ export async function verifyAdminSession(): Promise<AdminSessionResult> {
     return {
       ok: false,
       code: payload?.code,
-      status: response.status,
-      userId: payload?.userId,
-      message: payload?.message ?? "管理者セッションを確認できませんでした。",
-      detail: payload?.detail ?? null,
-      rlsProfileReadable: payload?.rlsProfileReadable ?? false,
-      rlsWarning: payload?.rlsWarning ?? null
+      message: payload?.message ?? "管理者ログインが必要です。",
+      detail: payload?.detail ?? null
     };
   }
 
   return payload;
+}
+
+export async function logoutAdminSession() {
+  await fetch("/api/admin/logout", {
+    method: "POST",
+    credentials: "same-origin"
+  });
+}
+
+export async function adminJsonFetch<T>(input: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(input, {
+    ...init,
+    credentials: "same-origin",
+    headers: {
+      ...(init?.body ? { "Content-Type": "application/json" } : {}),
+      ...init?.headers
+    }
+  });
+
+  const payload = (await response.json().catch(() => null)) as (T & { error?: string }) | null;
+
+  if (!response.ok) {
+    throw new Error(response.status === 401 ? "管理者ログインが必要です。" : (payload?.error ?? "管理APIの実行に失敗しました。"));
+  }
+
+  return payload as T;
 }

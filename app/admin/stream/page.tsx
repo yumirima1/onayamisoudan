@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
-import { verifyAdminSession } from "@/lib/adminSessionClient";
+import { adminJsonFetch, verifyAdminSession } from "@/lib/adminSessionClient";
 import type { PublicPost } from "@/lib/types";
 
 export default function AdminStreamPage() {
@@ -18,18 +17,12 @@ export default function AdminStreamPage() {
       const adminSession = await verifyAdminSession();
 
       if (!adminSession.ok) {
-        await supabase.auth.signOut();
         router.push("/admin/login");
         return;
       }
 
-      const { data } = await supabase
-        .from("public_posts")
-        .select("id, source_post_id, published_at, public_title, public_body, public_reply, category, archive_status, is_stream_used, stream_url")
-        .eq("archive_status", "published")
-        .order("published_at", { ascending: false });
-
-      setPosts((data ?? []) as PublicPost[]);
+      const data = await adminJsonFetch<{ posts: PublicPost[] }>("/api/admin/public-posts?archive_status=published");
+      setPosts(data.posts);
       setLoading(false);
     }
 
@@ -39,31 +32,17 @@ export default function AdminStreamPage() {
   async function saveStream(post: PublicPost, formData: FormData) {
     const streamUrl = String(formData.get("stream_url") ?? "").trim();
     const isStreamUsed = formData.get("is_stream_used") === "on";
-    const { error } = await supabase
-      .from("public_posts")
-      .update({
-        stream_url: streamUrl || null,
-        is_stream_used: isStreamUsed
-      })
-      .eq("id", post.id);
-
-    if (error) {
+    try {
+      await adminJsonFetch<{ ok: boolean }>(`/api/admin/public-posts/${post.id}/stream`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          streamUrl,
+          isStreamUsed
+        })
+      });
+    } catch {
       setMessage("配信情報を保存できませんでした。");
       return;
-    }
-
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
-
-    if (user) {
-      await supabase.from("admin_audit_logs").insert({
-        admin_id: user.id,
-        action: "update_stream_info",
-        target_table: "public_posts",
-        target_id: post.id,
-        metadata: {}
-      });
     }
 
     setMessage("配信情報を保存しました。");

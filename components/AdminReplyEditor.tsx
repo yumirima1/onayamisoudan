@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
+import { adminJsonFetch } from "@/lib/adminSessionClient";
 import type { AiDraft, Post, PublicPost } from "@/lib/types";
 import { SafetyNotice } from "@/components/SafetyNotice";
 
@@ -10,7 +10,6 @@ type DraftResponse = AiDraft;
 
 export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost: PublicPost | null }) {
   const router = useRouter();
-  const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [adminReply, setAdminReply] = useState(post.admin_reply ?? "");
   const [adminMemo, setAdminMemo] = useState(post.admin_memo ?? "");
   const [publicTitle, setPublicTitle] = useState(publicPost?.public_title ?? post.title);
@@ -24,103 +23,68 @@ export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost:
   const [aiEnabled, setAiEnabled] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSessionToken(data.session?.access_token ?? null);
-    });
     fetch("/api/ai/draft")
       .then((response) => response.json())
       .then((data: { enabled?: boolean }) => setAiEnabled(Boolean(data.enabled)))
       .catch(() => setAiEnabled(false));
   }, []);
 
-  async function audit(action: string, targetTable: string, targetId: string) {
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
-    if (!user) return;
-    await supabase.from("admin_audit_logs").insert({
-      admin_id: user.id,
-      action,
-      target_table: targetTable,
-      target_id: targetId,
-      metadata: {}
-    });
-  }
-
   async function saveReply() {
     setStatus("保存中...");
-    const { error } = await supabase
-      .from("posts")
-      .update({
-        admin_reply: adminReply || null,
-        admin_memo: adminMemo || null,
-        status: adminReply.trim() ? "replied" : post.status,
-        replied_at: adminReply.trim() ? new Date().toISOString() : post.replied_at
-      })
-      .eq("id", post.id);
 
-    if (error) {
+    try {
+      await adminJsonFetch<{ ok: boolean }>(`/api/admin/posts/${post.id}/reply`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          adminReply,
+          adminMemo,
+          currentStatus: post.status,
+          repliedAt: post.replied_at
+        })
+      });
+    } catch {
       setStatus("返信を保存できませんでした。");
       return;
     }
 
-    await audit("update_admin_reply", "posts", post.id);
     setStatus("返信と管理メモを保存しました。");
     router.refresh();
   }
 
   async function savePublicPost() {
     setStatus("公開用データを保存中...");
-    const payload = {
-      source_post_id: post.id,
-      public_title: publicTitle,
-      public_body: publicBody,
-      public_reply: publicReply,
-      category: post.category,
-      archive_status: archiveStatus,
-      is_stream_used: streamUsed,
-      stream_url: streamUrl.trim() ? streamUrl.trim() : null,
-      published_at: archiveStatus === "published" ? new Date().toISOString() : null
-    };
 
-    const query = publicPost
-      ? supabase.from("public_posts").update(payload).eq("id", publicPost.id).select().single()
-      : supabase.from("public_posts").insert(payload).select().single();
-
-    const { data, error } = await query;
-
-    if (error || !data) {
+    try {
+      await adminJsonFetch<{ publicPost: PublicPost }>(`/api/admin/posts/${post.id}/public-post`, {
+        method: "PUT",
+        body: JSON.stringify({
+          publicPostId: publicPost?.id ?? null,
+          publicTitle,
+          publicBody,
+          publicReply,
+          category: post.category,
+          archiveStatus,
+          streamUsed,
+          streamUrl
+        })
+      });
+    } catch {
       setStatus("公開用データを保存できませんでした。公開許可と入力内容を確認してください。");
       return;
     }
 
-    await supabase
-      .from("posts")
-      .update({
-        public_draft_title: publicTitle,
-        public_draft_body: publicBody,
-        public_draft_reply: publicReply
-      })
-      .eq("id", post.id);
-
-    await audit(publicPost ? "update_public_post" : "create_public_post", "public_posts", data.id);
     setStatus("公開用データを保存しました。");
     router.refresh();
   }
 
   async function generateDraft() {
-    if (!sessionToken) {
-      setStatus("ログイン状態を確認できません。再ログインしてください。");
-      return;
-    }
-
     setStatus("AI下書きを生成中...");
     const response = await fetch("/api/ai/draft", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${sessionToken}`,
         "Content-Type": "application/json"
       },
+      credentials: "same-origin",
       body: JSON.stringify({ postId: post.id })
     });
 

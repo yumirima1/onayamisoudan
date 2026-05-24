@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AdminReplyEditor } from "@/components/AdminReplyEditor";
-import { supabase } from "@/lib/supabaseClient";
-import { verifyAdminSession } from "@/lib/adminSessionClient";
+import { adminJsonFetch, verifyAdminSession } from "@/lib/adminSessionClient";
 import type { Post, PublicPost } from "@/lib/types";
 
 export default function AdminPostDetailPage({ params }: { params: { id: string } }) {
@@ -18,25 +17,13 @@ export default function AdminPostDetailPage({ params }: { params: { id: string }
       const adminSession = await verifyAdminSession();
 
       if (!adminSession.ok) {
-        await supabase.auth.signOut();
         router.push("/admin/login");
         return;
       }
 
-      const { data: postData } = await supabase
-        .from("posts")
-        .select("id, created_at, nickname, age_group, category, title, body, urgency, allow_public, allow_stream, admin_reply, admin_memo, public_draft_title, public_draft_body, public_draft_reply, risk_flags, ai_summary, ai_drafts, status, replied_at")
-        .eq("id", params.id)
-        .single();
-
-      const { data: publicPostData } = await supabase
-        .from("public_posts")
-        .select("id, source_post_id, published_at, public_title, public_body, public_reply, category, archive_status, is_stream_used, stream_url")
-        .eq("source_post_id", params.id)
-        .maybeSingle();
-
-      setPost((postData ?? null) as Post | null);
-      setPublicPost((publicPostData ?? null) as PublicPost | null);
+      const data = await adminJsonFetch<{ post: Post; publicPost: PublicPost | null }>(`/api/admin/posts/${params.id}`);
+      setPost(data.post);
+      setPublicPost(data.publicPost);
       setLoading(false);
     }
 

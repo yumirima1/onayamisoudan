@@ -31,6 +31,38 @@
       "namedRegex": "^/admin/posts/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/admin/posts/[id]",
+      "regex": "^/api/admin/posts/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/posts/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/admin/posts/[id]/public-post",
+      "regex": "^/api/admin/posts/([^/]+?)/public\\-post(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/posts/(?<nxtPid>[^/]+?)/public\\-post(?:/)?$"
+    },
+    {
+      "page": "/api/admin/posts/[id]/reply",
+      "regex": "^/api/admin/posts/([^/]+?)/reply(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/posts/(?<nxtPid>[^/]+?)/reply(?:/)?$"
+    },
+    {
+      "page": "/api/admin/public-posts/[id]/stream",
+      "regex": "^/api/admin/public\\-posts/([^/]+?)/stream(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/public\\-posts/(?<nxtPid>[^/]+?)/stream(?:/)?$"
+    },
+    {
       "page": "/public/[id]",
       "regex": "^/public/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -87,6 +119,30 @@
       "regex": "^/admin/stream(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/admin/stream(?:/)?$"
+    },
+    {
+      "page": "/api/admin/login",
+      "regex": "^/api/admin/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/login(?:/)?$"
+    },
+    {
+      "page": "/api/admin/logout",
+      "regex": "^/api/admin/logout(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/logout(?:/)?$"
+    },
+    {
+      "page": "/api/admin/posts",
+      "regex": "^/api/admin/posts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/posts(?:/)?$"
+    },
+    {
+      "page": "/api/admin/public-posts",
+      "regex": "^/api/admin/public\\-posts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/public\\-posts(?:/)?$"
     },
     {
       "page": "/api/admin/session",

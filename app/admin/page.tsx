@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
-import { verifyAdminSession } from "@/lib/adminSessionClient";
+import { adminJsonFetch, logoutAdminSession, verifyAdminSession } from "@/lib/adminSessionClient";
 import type { Post } from "@/lib/types";
 
 export default function AdminPage() {
@@ -18,37 +17,24 @@ export default function AdminPage() {
       const adminSession = await verifyAdminSession();
 
       if (!adminSession.ok) {
-        await supabase.auth.signOut();
         router.push("/admin/login");
         return;
       }
 
-      const storedDiagnostic = window.sessionStorage.getItem("adminLoginDiagnostic");
-      if (storedDiagnostic) {
-        const parsed = JSON.parse(storedDiagnostic) as { userId?: string; rlsWarning?: string | null };
-        setDiagnostic(
-          [
-            parsed.userId ? `ログイン確認済み auth user.id: ${parsed.userId}` : null,
-            parsed.rlsWarning ? `RLS確認: ${parsed.rlsWarning}` : null
-          ]
-            .filter(Boolean)
-            .join("\n")
-        );
-        window.sessionStorage.removeItem("adminLoginDiagnostic");
-      }
-
-      const { data } = await supabase
-        .from("posts")
-        .select("id, created_at, nickname, age_group, category, title, body, urgency, allow_public, allow_stream, admin_reply, admin_memo, public_draft_title, public_draft_body, public_draft_reply, risk_flags, ai_summary, ai_drafts, status, replied_at")
-        .order("created_at", { ascending: false })
-        .limit(50);
-
-      setPosts((data ?? []) as Post[]);
+      setDiagnostic("簡易管理ログイン確認済み。管理データはサーバーAPI経由で取得しています。");
+      const data = await adminJsonFetch<{ posts: Post[] }>("/api/admin/posts?limit=50");
+      setPosts(data.posts);
       setLoading(false);
     }
 
     load();
   }, [router]);
+
+  async function handleLogout() {
+    await logoutAdminSession();
+    router.push("/admin/login");
+    router.refresh();
+  }
 
   const cards = [
     { label: "未返信", value: posts.filter((post) => post.status === "unreplied").length, href: "/admin/posts?status=unreplied" },
@@ -71,6 +57,9 @@ export default function AdminPage() {
           <Link href="/admin/stream" className="rounded-md border border-white/15 px-4 py-2 text-sm hover:bg-white/10">
             配信管理
           </Link>
+          <button onClick={handleLogout} className="rounded-md border border-white/15 px-4 py-2 text-sm hover:bg-white/10">
+            ログアウト
+          </button>
         </div>
       </div>
       {loading ? <p className="mt-8 text-night-muted">読み込み中...</p> : null}
