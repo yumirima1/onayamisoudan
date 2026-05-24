@@ -1,41 +1,57 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { AdminReplyEditor } from "@/components/AdminReplyEditor";
 import { adminJsonFetch, verifyAdminSession } from "@/lib/adminSessionClient";
 import type { Post, PublicPost } from "@/lib/types";
 
-export default function AdminPostDetailPage({ params }: { params: { id: string } }) {
+export default function AdminPostDetailPage() {
   const router = useRouter();
+  const params = useParams<{ id?: string | string[] }>();
+  const id = typeof params.id === "string" ? params.id : null;
   const [post, setPost] = useState<Post | null>(null);
   const [publicPost, setPublicPost] = useState<PublicPost | null>(null);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     async function load() {
-      const adminSession = await verifyAdminSession();
+      setLoading(true);
+      setErrorMessage("");
 
-      if (!adminSession.ok) {
-        router.push("/admin/login");
-        return;
+      try {
+        if (!id) {
+          setErrorMessage("投稿IDを取得できませんでした。");
+          return;
+        }
+
+        const adminSession = await verifyAdminSession();
+
+        if (!adminSession.ok) {
+          router.push("/admin/login");
+          return;
+        }
+
+        const data = await adminJsonFetch<{ post: Post; publicPost: PublicPost | null }>(`/api/admin/posts/${id}`);
+        setPost(data.post);
+        setPublicPost(data.publicPost);
+      } catch (error) {
+        setErrorMessage(error instanceof Error ? error.message : "投稿を取得できませんでした。");
+      } finally {
+        setLoading(false);
       }
-
-      const data = await adminJsonFetch<{ post: Post; publicPost: PublicPost | null }>(`/api/admin/posts/${params.id}`);
-      setPost(data.post);
-      setPublicPost(data.publicPost);
-      setLoading(false);
     }
 
     load();
-  }, [params.id, router]);
+  }, [id, router]);
 
   if (loading) {
     return <div className="mx-auto max-w-6xl px-5 py-12 text-night-muted">読み込み中...</div>;
   }
 
   if (!post) {
-    return <div className="mx-auto max-w-6xl px-5 py-12 text-night-muted">投稿が見つかりません。</div>;
+    return <div className="mx-auto max-w-6xl px-5 py-12 text-night-muted">{errorMessage || "投稿が見つかりません。"}</div>;
   }
 
   return (

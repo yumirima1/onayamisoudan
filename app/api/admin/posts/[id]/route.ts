@@ -15,6 +15,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 
   const { id } = await params;
+
+  if (!id || id === "undefined") {
+    return NextResponse.json({ error: "投稿IDが指定されていません。" }, { status: 400 });
+  }
+
   const { data: post, error: postError } = await auth.serviceClient.from("posts").select(postSelect).eq("id", id).maybeSingle();
 
   if (postError) {
