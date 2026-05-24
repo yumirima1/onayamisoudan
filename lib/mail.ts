@@ -1,6 +1,6 @@
 type SendReplyNotificationInput = {
   to: string;
-  siteUrl: string;
+  replyUrl: string;
 };
 
 type SendReplyNotificationResult =
@@ -22,7 +22,7 @@ type SendReplyNotificationResult =
       error: string;
     };
 
-export async function sendReplyNotificationEmail({ to, siteUrl }: SendReplyNotificationInput): Promise<SendReplyNotificationResult> {
+export async function sendReplyNotificationEmail({ to, replyUrl }: SendReplyNotificationInput): Promise<SendReplyNotificationResult> {
   const resendApiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM;
 
@@ -39,8 +39,8 @@ export async function sendReplyNotificationEmail({ to, siteUrl }: SendReplyNotif
     "よるの相談箱に返信が届きました。",
     "",
     "相談内容や返信本文は、このメールには載せていません。",
-    "サイトで確認してください。",
-    siteUrl
+    "返信が届きました。サイトでご確認ください。",
+    replyUrl
   ].join("\n");
 
   const response = await fetch("https://api.resend.com/emails", {

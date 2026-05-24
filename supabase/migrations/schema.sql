@@ -178,6 +178,22 @@ where archive_status = 'published';
 
 alter view public.public_posts_view set (security_invoker = true);
 
+create or replace view public.archive_posts_view as
+select
+  id,
+  created_at,
+  updated_at,
+  category,
+  title,
+  body,
+  admin_reply,
+  replied_at
+from public.posts
+where allow_public = true
+and urgency <> 'risky';
+
+grant select on public.archive_posts_view to anon, authenticated;
+
 alter table public.posts enable row level security;
 alter table public.public_posts enable row level security;
 alter table public.post_tags enable row level security;

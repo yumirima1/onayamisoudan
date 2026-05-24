@@ -10,17 +10,20 @@ export function SubmitForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
   const [submittedUrgency, setSubmittedUrgency] = useState<"normal" | "soon" | "risky">("normal");
+  const [submittedHadEmail, setSubmittedHadEmail] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     setStatus("sending");
     setMessage("");
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
+    const email = normalizeEmpty(String(formData.get("email") ?? ""));
     const urgency = String(formData.get("urgency") ?? "normal");
     const parsed = submitPostSchema.safeParse({
       nickname: normalizeEmpty(String(formData.get("nickname") ?? "")),
-      email: normalizeEmpty(String(formData.get("email") ?? "")),
+      email,
       age_group: normalizeEmpty(String(formData.get("age_group") ?? "")),
       category: String(formData.get("category") ?? ""),
       title: String(formData.get("title") ?? ""),
@@ -36,31 +39,47 @@ export function SubmitForm() {
       return;
     }
 
-    const response = await fetch("/api/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(parsed.data)
-    });
+    try {
+      const response = await fetch("/api/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(parsed.data)
+      });
 
-    if (!response.ok) {
+      if (!response.ok) {
+        setStatus("error");
+        setMessage("送信できませんでした。少し時間を置いてもう一度お試しください。");
+        return;
+      }
+
+      form.reset();
+      setSubmittedUrgency(parsed.data.urgency);
+      setSubmittedHadEmail(Boolean(parsed.data.email));
+      setStatus("done");
+      setMessage("");
+    } catch {
       setStatus("error");
-      setMessage("送信できませんでした。時間を置いてもう一度お試しください。");
-      return;
+      setMessage("送信できませんでした。少し時間を置いてもう一度お試しください。");
     }
-
-    event.currentTarget.reset();
-    setSubmittedUrgency(parsed.data.urgency);
-    setStatus("done");
-    setMessage("投稿ありがとうございました。すべてに返信できるよう努力しますが、緊急時は専門機関に相談してください。");
   }
 
   if (status === "done") {
     return (
       <div className="space-y-5 rounded-lg border border-white/10 bg-night-card p-6 shadow-quiet">
-        <h2 className="text-2xl font-semibold text-night-text">投稿ありがとうございました</h2>
-        <p className="leading-8 text-night-muted">{message}</p>
+        <h2 className="text-2xl font-semibold text-night-text">投稿を受け取りました</h2>
+        <div className="space-y-3 leading-8 text-night-muted">
+          <p>書いてくれてありがとうございます。</p>
+          <p>返信には時間がかかることがあります。</p>
+          <p>この場所は医療・診断・治療ではありません。</p>
+          <p>今すぐ危ない場合は、身近な人・学校・地域の相談窓口・緊急窓口に頼ってください。</p>
+          <p>
+            {submittedHadEmail
+              ? "メールアドレスを入力した場合は、返信時に通知を送れる場合があります。"
+              : "メール未入力の場合は、この投稿への個別通知は届きません。"}
+          </p>
+        </div>
         {submittedUrgency === "risky" ? (
           <div className="rounded-lg border border-red-300/40 bg-red-950/30 p-5 text-red-100">
             <h3 className="font-semibold">今すぐの安全を優先してください</h3>
@@ -69,7 +88,15 @@ export function SubmitForm() {
             </p>
           </div>
         ) : null}
-        <button onClick={() => setStatus("idle")} className="rounded-md border border-white/15 px-4 py-2 text-sm text-night-text hover:bg-white/10">
+        <button
+          onClick={() => {
+            setStatus("idle");
+            setMessage("");
+            setSubmittedUrgency("normal");
+            setSubmittedHadEmail(false);
+          }}
+          className="rounded-md border border-white/15 px-4 py-2 text-sm text-night-text hover:bg-white/10"
+        >
           もう一度投稿する
         </button>
       </div>

@@ -40,6 +40,17 @@ export type PublicPost = {
   stream_url: string | null;
 };
 
+export type ArchivePost = {
+  id: string;
+  created_at: string;
+  updated_at: string | null;
+  category: string;
+  title: string;
+  body: string;
+  admin_reply: string | null;
+  replied_at: string | null;
+};
+
 export type AiDraft = {
   summary: string;
   replyDrafts: string[];

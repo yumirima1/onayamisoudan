@@ -39,6 +39,14 @@
       "namedRegex": "^/api/admin/posts/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/admin/posts/[id]/notify",
+      "regex": "^/api/admin/posts/([^/]+?)/notify(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/posts/(?<nxtPid>[^/]+?)/notify(?:/)?$"
+    },
+    {
       "page": "/api/admin/posts/[id]/public-post",
       "regex": "^/api/admin/posts/([^/]+?)/public\\-post(?:/)?$",
       "routeKeys": {
@@ -61,6 +69,14 @@
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/api/admin/public\\-posts/(?<nxtPid>[^/]+?)/stream(?:/)?$"
+    },
+    {
+      "page": "/archive/[id]",
+      "regex": "^/archive/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/archive/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
       "page": "/public/[id]",
@@ -161,6 +177,12 @@
       "regex": "^/api/posts(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/posts(?:/)?$"
+    },
+    {
+      "page": "/archive",
+      "regex": "^/archive(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/archive(?:/)?$"
     },
     {
       "page": "/guideline",

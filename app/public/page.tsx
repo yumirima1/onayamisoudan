@@ -36,7 +36,7 @@ export default async function PublicArchivePage({ searchParams }: { searchParams
           <p className="mt-3 max-w-2xl leading-8 text-night-muted">掲載されているのは、許可を得て匿名編集した公開専用データです。</p>
         </div>
         <Suspense fallback={null}>
-          <TagFilter categories={categories} />
+          <TagFilter categories={categories} basePath="/public" />
         </Suspense>
       </div>
       <div className="mt-8 grid gap-4 md:grid-cols-2">

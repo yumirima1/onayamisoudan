@@ -6,6 +6,7 @@ type NotifyPost = {
   id: string;
   email: string | null;
   admin_reply: string | null;
+  allow_public: boolean;
 };
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   const { data: post, error } = await auth.serviceClient
     .from("posts")
-    .select("id, email, admin_reply")
+    .select("id, email, admin_reply, allow_public")
     .eq("id", id)
     .maybeSingle<NotifyPost>();
 
@@ -43,10 +44,22 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json({ error: "管理者返信を保存してから通知してください。" }, { status: 400 });
   }
 
-  const siteUrl = process.env.APP_BASE_URL ?? request.nextUrl.origin;
+  const siteUrl = process.env.APP_BASE_URL;
+
+  if (!siteUrl) {
+    return NextResponse.json({
+      ok: true,
+      sent: false,
+      mocked: true,
+      message: "APP_BASE_URL が未設定のため、メールは実送信していません。"
+    });
+  }
+
+  // TODO: 非公開投稿の本人限定返信確認URLを追加したら、allow_public=false の通知先をそのURLへ差し替える。
+  const replyUrl = post.allow_public ? `${siteUrl}/archive/${post.id}` : siteUrl;
   const result = await sendReplyNotificationEmail({
     to: post.email,
-    siteUrl
+    replyUrl
   });
 
   if (!result.ok) {

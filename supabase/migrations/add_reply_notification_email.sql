@@ -13,3 +13,19 @@ with check (
   and (email is null or char_length(email) <= 254)
   and urgency in ('normal', 'soon', 'risky')
 );
+
+create or replace view public.archive_posts_view as
+select
+  id,
+  created_at,
+  updated_at,
+  category,
+  title,
+  body,
+  admin_reply,
+  replied_at
+from public.posts
+where allow_public = true
+and urgency <> 'risky';
+
+grant select on public.archive_posts_view to anon, authenticated;
