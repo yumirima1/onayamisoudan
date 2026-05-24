@@ -30,7 +30,7 @@ export default async function ArchivePostPage({ params }: { params: Promise<{ id
   const supabase = createServerSupabase();
   const { data } = await supabase
     .from("archive_posts_view")
-    .select("id, created_at, updated_at, category, title, body, admin_reply, replied_at")
+    .select("created_at, category, title, body, admin_reply")
     .eq("id", id)
     .maybeSingle();
 

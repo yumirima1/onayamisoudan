@@ -50,17 +50,15 @@ export default async function ArchivePage({ searchParams }: { searchParams: Prom
 
       <div className="mt-8 grid gap-4 md:grid-cols-2">
         {posts.map((post) => (
-          <article key={post.id} className="rounded-lg border border-white/10 bg-night-card p-5 transition hover:border-night-accent/60">
+          <Link key={post.id} href={`/archive/${post.id}`} className="block rounded-lg border border-white/10 bg-night-card p-5 transition hover:border-night-accent/60">
             <div className="flex flex-wrap items-center gap-2 text-xs text-night-muted">
               <span>{post.category}</span>
               <span>{new Date(post.created_at).toLocaleDateString("ja-JP")}</span>
               <span>{post.admin_reply ? "返信あり" : "返信待ち"}</span>
             </div>
-            <h2 className="mt-3 text-lg font-semibold text-night-text">
-              <Link href={`/archive/${post.id}`}>{post.title}</Link>
-            </h2>
+            <h2 className="mt-3 text-lg font-semibold text-night-text">{post.title}</h2>
             <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-night-muted">{excerpt(post.body)}</p>
-          </article>
+          </Link>
         ))}
       </div>
 

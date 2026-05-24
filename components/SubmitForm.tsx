@@ -12,7 +12,8 @@ export function SubmitForm() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [submittedUrgency, setSubmittedUrgency] = useState<"normal" | "soon" | "risky">("normal");
-  const [submittedHadEmail, setSubmittedHadEmail] = useState(false);
+  const [replyUrl, setReplyUrl] = useState("");
+  const [copyMessage, setCopyMessage] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -20,6 +21,7 @@ export function SubmitForm() {
     setLoading(true);
     setStatus("idle");
     setMessage("");
+    setCopyMessage("");
 
     try {
       if (!form) {
@@ -27,11 +29,10 @@ export function SubmitForm() {
       }
 
       const formData = new FormData(form);
-      const email = normalizeEmpty(String(formData.get("email") ?? ""));
       const urgency = String(formData.get("urgency") ?? "normal");
       const parsed = submitPostSchema.safeParse({
         nickname: normalizeEmpty(String(formData.get("nickname") ?? "")),
-        email,
+        email: null,
         age_group: normalizeEmpty(String(formData.get("age_group") ?? "")),
         category: String(formData.get("category") ?? ""),
         title: String(formData.get("title") ?? ""),
@@ -59,9 +60,15 @@ export function SubmitForm() {
         throw new Error("submit_failed");
       }
 
+      const payload = (await response.json().catch(() => null)) as { replyUrl?: string } | null;
+
+      if (!payload?.replyUrl) {
+        throw new Error("missing_reply_url");
+      }
+
       form.reset();
       setSubmittedUrgency(parsed.data.urgency);
-      setSubmittedHadEmail(Boolean(parsed.data.email));
+      setReplyUrl(payload.replyUrl);
       setStatus("done");
       setMessage("");
     } catch {
@@ -69,6 +76,17 @@ export function SubmitForm() {
       setMessage("送信できませんでした。少し時間を置いてもう一度お試しください。");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function copyReplyUrl() {
+    if (!replyUrl) return;
+
+    try {
+      await navigator.clipboard.writeText(replyUrl);
+      setCopyMessage("コピーしました。");
+    } catch {
+      setCopyMessage("コピーできませんでした。URLを選択して保存してください。");
     }
   }
 
@@ -81,12 +99,18 @@ export function SubmitForm() {
           <p>返信には時間がかかることがあります。</p>
           <p>この場所は医療・診断・治療ではありません。</p>
           <p>今すぐ危ない場合は、身近な人・学校・地域の相談窓口・緊急窓口に頼ってください。</p>
-          <p>
-            {submittedHadEmail
-              ? "返信があった場合、入力したメールアドレス宛に確認用URLを送ります。"
-              : "メール未入力の場合は、この投稿への個別通知は届きません。"}
-          </p>
+          <p>返信がついた場合、このURLから確認できます。</p>
         </div>
+        <div className="rounded-lg border border-white/10 bg-black/20 p-4">
+          <p className="break-all text-sm leading-7 text-night-text">{replyUrl}</p>
+          <button onClick={copyReplyUrl} className="mt-4 rounded-md bg-night-accent px-4 py-2 text-sm font-semibold text-white">
+            コピーする
+          </button>
+          {copyMessage ? <p className="mt-3 text-sm text-night-muted">{copyMessage}</p> : null}
+        </div>
+        <p className="text-sm leading-7 text-night-muted">
+          このURLは再表示できません。自分だけが見られる場所に保存してください。
+        </p>
         {submittedUrgency === "risky" ? (
           <div className="rounded-lg border border-red-300/40 bg-red-950/30 p-5 text-red-100">
             <h3 className="font-semibold">今すぐの安全を優先してください</h3>
@@ -100,7 +124,8 @@ export function SubmitForm() {
             setStatus("idle");
             setMessage("");
             setSubmittedUrgency("normal");
-            setSubmittedHadEmail(false);
+            setReplyUrl("");
+            setCopyMessage("");
           }}
           className="rounded-md border border-white/15 px-4 py-2 text-sm text-night-text hover:bg-white/10"
         >
@@ -129,19 +154,6 @@ export function SubmitForm() {
           </select>
         </label>
       </div>
-      <label className="space-y-2 text-sm text-night-muted">
-        <span>返信通知を受け取るメールアドレス 任意</span>
-        <input
-          name="email"
-          type="email"
-          maxLength={254}
-          autoComplete="email"
-          className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-3 outline-none focus:border-night-accent"
-        />
-        <span className="block text-xs leading-6 text-night-muted">
-          管理者が返信したことをお知らせするためだけに使います。メール本文に相談内容や返信本文は載せません。
-        </span>
-      </label>
       <label className="space-y-2 text-sm text-night-muted">
         <span>カテゴリ 必須</span>
         <select name="category" required className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-3 outline-none focus:border-night-accent">

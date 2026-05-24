@@ -21,6 +21,8 @@ export async function POST(request: NextRequest) {
 
   const supabase = createServerSupabase();
   const replyToken = createReplyToken();
+  const baseUrl = process.env.APP_BASE_URL ?? request.nextUrl.origin;
+  const replyUrl = `${baseUrl.replace(/\/$/, "")}/reply/${replyToken}`;
   const { error } = await supabase.from("posts").insert({
     ...parsed.data,
     reply_token_hash: hashReplyToken(replyToken)
@@ -30,5 +32,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Could not submit post." }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true }, { status: 201 });
+  return NextResponse.json({ ok: true, replyUrl }, { status: 201 });
 }
