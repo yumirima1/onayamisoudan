@@ -82,7 +82,7 @@ export default function AdminPostDetailPage() {
         <p className="mt-5 whitespace-pre-wrap break-words leading-8 text-night-muted">{post.body}</p>
       </section>
       <div className="mt-6">
-        <AdminReplyEditor post={post} publicPost={publicPost} />
+        <AdminReplyEditor post={post} publicPost={publicPost} onPostUpdated={(patch) => setPost((current) => (current ? { ...current, ...patch } : current))} />
       </div>
     </div>
   );

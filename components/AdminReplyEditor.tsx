@@ -12,7 +12,15 @@ const adminFieldClass =
 const adminButtonClass =
   "w-full rounded-md border border-white/15 px-4 py-3 text-sm text-night-text hover:bg-white/10 disabled:opacity-50 sm:w-auto";
 
-export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost: PublicPost | null }) {
+export function AdminReplyEditor({
+  post,
+  publicPost,
+  onPostUpdated
+}: {
+  post: Post;
+  publicPost: PublicPost | null;
+  onPostUpdated?: (patch: Partial<Post>) => void;
+}) {
   const router = useRouter();
   const [adminReply, setAdminReply] = useState(post.admin_reply ?? "");
   const [adminMemo, setAdminMemo] = useState(post.admin_memo ?? "");
@@ -122,6 +130,53 @@ export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost:
     }
   }
 
+  async function stopPublicVisibility() {
+    const confirmed = window.confirm("この投稿を公開アーカイブから非公開にします。よろしいですか？");
+
+    if (!confirmed) {
+      return;
+    }
+
+    setStatus("公開停止中...");
+
+    try {
+      await adminJsonFetch<{ ok: boolean; allowPublic: boolean }>(`/api/admin/posts/${post.id}/visibility`, {
+        method: "PATCH"
+      });
+      onPostUpdated?.({ allow_public: false });
+      setStatus("公開アーカイブから非公開にしました。");
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "公開停止に失敗しました。");
+    }
+  }
+
+  async function deletePost() {
+    const firstConfirmed = window.confirm("この投稿を完全削除します。公開用データも削除され、元に戻せません。続けますか？");
+
+    if (!firstConfirmed) {
+      return;
+    }
+
+    const secondConfirmed = window.confirm("最終確認です。本当にこの投稿を完全削除しますか？");
+
+    if (!secondConfirmed) {
+      return;
+    }
+
+    setStatus("投稿を削除中...");
+
+    try {
+      await adminJsonFetch<{ ok: boolean }>(`/api/admin/posts/${post.id}/delete`, {
+        method: "DELETE"
+      });
+      setStatus("投稿を削除しました。");
+      router.push("/admin/posts");
+      router.refresh();
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "投稿を削除できませんでした。");
+    }
+  }
+
   return (
     <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
       <section className="min-w-0 space-y-5 overflow-hidden rounded-lg border border-white/10 bg-night-card p-4 sm:p-6">
@@ -218,6 +273,38 @@ export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost:
           </div>
         </section>
       ) : null}
+
+      <section className="min-w-0 space-y-4 overflow-hidden rounded-lg border border-white/10 bg-night-card p-4 sm:p-6 lg:col-span-2">
+        <div className="min-w-0">
+          <h2 className="break-words text-xl font-semibold text-night-text">公開管理</h2>
+          <p className="mt-2 break-words text-sm leading-7 text-night-muted">
+            個人情報混入、危険判断、投稿者保護、荒らし対応が必要な場合に使います。まずは公開停止を優先してください。
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          {post.allow_public ? (
+            <button
+              type="button"
+              onClick={stopPublicVisibility}
+              className="w-full rounded-md border border-night-warm/40 px-4 py-3 text-sm font-semibold text-night-text hover:bg-night-warm/10 sm:w-auto"
+            >
+              公開停止
+            </button>
+          ) : (
+            <p className="break-words rounded-md border border-white/10 bg-black/10 px-4 py-3 text-sm leading-7 text-night-muted">
+              この投稿は公開アーカイブ対象ではありません。
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={deletePost}
+            className="w-full rounded-md border border-red-300/35 px-4 py-3 text-sm font-semibold text-red-100 hover:bg-red-950/20 sm:w-auto"
+          >
+            完全削除
+          </button>
+        </div>
+        {status ? <p className="break-words text-sm leading-7 text-night-muted">{status}</p> : null}
+      </section>
     </div>
   );
 }

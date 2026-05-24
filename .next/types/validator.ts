@@ -209,6 +209,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../app/api/admin/posts/[id]/delete/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/admin/posts/[id]/delete">> = Specific
+  const handler = {} as typeof import("../../app/api/admin/posts/[id]/delete/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../app/api/admin/posts/[id]/notify/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/admin/posts/[id]/notify">> = Specific
@@ -240,6 +249,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/admin/posts/[id]">> = Specific
   const handler = {} as typeof import("../../app/api/admin/posts/[id]/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/admin/posts/[id]/visibility/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/admin/posts/[id]/visibility">> = Specific
+  const handler = {} as typeof import("../../app/api/admin/posts/[id]/visibility/route.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

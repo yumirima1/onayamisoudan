@@ -39,6 +39,14 @@
       "namedRegex": "^/api/admin/posts/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/admin/posts/[id]/delete",
+      "regex": "^/api/admin/posts/([^/]+?)/delete(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/posts/(?<nxtPid>[^/]+?)/delete(?:/)?$"
+    },
+    {
       "page": "/api/admin/posts/[id]/notify",
       "regex": "^/api/admin/posts/([^/]+?)/notify(?:/)?$",
       "routeKeys": {
@@ -61,6 +69,14 @@
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/api/admin/posts/(?<nxtPid>[^/]+?)/reply(?:/)?$"
+    },
+    {
+      "page": "/api/admin/posts/[id]/visibility",
+      "regex": "^/api/admin/posts/([^/]+?)/visibility(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/posts/(?<nxtPid>[^/]+?)/visibility(?:/)?$"
     },
     {
       "page": "/api/admin/public-posts/[id]/stream",
