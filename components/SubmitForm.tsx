@@ -6,8 +6,9 @@ import { normalizeEmpty, submitPostSchema } from "@/lib/validation";
 const ageGroups = ["中学生", "高校生", "大学生", "社会人", "その他", "答えたくない"];
 const categories = ["学校", "人間関係", "家族", "恋愛", "将来", "気分", "ただ聞いてほしい", "その他"];
 const fieldClass =
-  "w-full rounded-lg border border-night-line/80 bg-night-background/45 px-4 py-3.5 text-base outline-none transition placeholder:text-night-muted/60 focus:border-night-accent focus:bg-night-background/65 focus:ring-2 focus:ring-night-accent/15";
-const labelClass = "space-y-2.5 text-sm leading-6 text-night-muted";
+  "w-full min-h-12 rounded-lg border border-night-line/80 bg-night-background/45 px-4 py-3.5 text-base outline-none transition touch-manipulation placeholder:text-night-muted/60 focus:border-night-accent focus:bg-night-background/65 focus:ring-2 focus:ring-night-accent/15";
+const selectClass = `${fieldClass} relative z-10 cursor-pointer`;
+const labelClass = "block space-y-2.5 text-sm leading-6 text-night-muted";
 
 export function SubmitForm() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -150,7 +151,7 @@ export function SubmitForm() {
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="min-w-0 space-y-6 overflow-hidden rounded-lg border border-night-line bg-night-card p-4 shadow-quiet sm:p-7">
+    <form ref={formRef} onSubmit={handleSubmit} className="min-w-0 space-y-6 rounded-lg border border-night-line bg-night-card p-4 shadow-quiet sm:p-7">
       <label className="hidden" aria-hidden="true">
         <span>Web site</span>
         <input name="website" tabIndex={-1} autoComplete="off" />
@@ -162,7 +163,7 @@ export function SubmitForm() {
         </label>
         <label className={labelClass}>
           <span>年齢層 任意</span>
-          <select name="age_group" className={fieldClass}>
+          <select name="age_group" className={selectClass}>
             <option value="">選択しない</option>
             {ageGroups.map((ageGroup) => (
               <option key={ageGroup} value={ageGroup}>
@@ -174,7 +175,7 @@ export function SubmitForm() {
       </div>
       <label className={labelClass}>
         <span>カテゴリ 必須</span>
-        <select name="category" required className={fieldClass}>
+        <select name="category" required className={selectClass}>
           <option value="">選択してください</option>
           {categories.map((category) => (
             <option key={category} value={category}>
@@ -201,7 +202,7 @@ export function SubmitForm() {
       </label>
       <label className={labelClass}>
         <span>緊急度 必須</span>
-        <select name="urgency" required defaultValue="normal" className={fieldClass}>
+        <select name="urgency" required defaultValue="normal" className={selectClass}>
           <option value="normal">通常</option>
           <option value="soon">少し早めに見てほしい</option>
           <option value="risky">公開しない方がいい内容かも</option>
