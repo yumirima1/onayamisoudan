@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import QRCode from "qrcode";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { normalizeEmpty, submitPostSchema } from "@/lib/validation";
 
 const ageGroups = ["中学生", "高校生", "大学生", "社会人", "その他", "答えたくない"];
@@ -17,7 +18,49 @@ export function SubmitForm() {
   const [message, setMessage] = useState("");
   const [submittedUrgency, setSubmittedUrgency] = useState<"normal" | "soon" | "risky">("normal");
   const [replyUrl, setReplyUrl] = useState("");
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [copyMessage, setCopyMessage] = useState("");
+  const [qrMessage, setQrMessage] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function generateQrCode() {
+      if (!replyUrl) {
+        setQrCodeUrl("");
+        return;
+      }
+
+      try {
+        const absoluteReplyUrl = new URL(replyUrl, window.location.origin).toString();
+        const dataUrl = await QRCode.toDataURL(absoluteReplyUrl, {
+          errorCorrectionLevel: "M",
+          margin: 2,
+          scale: 8,
+          color: {
+            dark: "#0d1118",
+            light: "#f5f1e8"
+          }
+        });
+
+        if (!cancelled) {
+          setQrCodeUrl(dataUrl);
+          setQrMessage("");
+        }
+      } catch {
+        if (!cancelled) {
+          setQrCodeUrl("");
+          setQrMessage("QRコードを作成できませんでした。URLを保存してください。");
+        }
+      }
+    }
+
+    generateQrCode();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [replyUrl]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -26,6 +69,7 @@ export function SubmitForm() {
     setStatus("idle");
     setMessage("");
     setCopyMessage("");
+    setQrMessage("");
 
     try {
       if (!form) {
@@ -95,6 +139,21 @@ export function SubmitForm() {
     }
   }
 
+  function saveQrCode() {
+    if (!qrCodeUrl) {
+      setQrMessage("QRコードをまだ保存できません。少し待ってからもう一度お試しください。");
+      return;
+    }
+
+    const link = document.createElement("a");
+    link.href = qrCodeUrl;
+    link.download = "yoru-reply-qr.png";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setQrMessage("QRコードを保存しました。");
+  }
+
   if (status === "done") {
     return (
       <div className="min-w-0 space-y-6 overflow-hidden rounded-lg border border-night-line bg-night-card p-4 shadow-quiet sm:p-7">
@@ -114,14 +173,34 @@ export function SubmitForm() {
           <p className="mt-3 max-w-full overflow-hidden break-all rounded-md border border-night-line/70 bg-night-background/45 p-3 text-sm leading-7 text-night-text">
             {replyUrl}
           </p>
-          <button
-            type="button"
-            onClick={copyReplyUrl}
-            className="mt-4 rounded-md bg-night-accent px-4 py-2.5 text-sm font-semibold text-night-background transition hover:bg-night-accent/90 focus:outline-none focus:ring-2 focus:ring-night-accent/35"
-          >
-            コピーする
-          </button>
+          {qrCodeUrl ? (
+            <div className="mt-5 flex flex-col items-center rounded-lg border border-night-line/80 bg-night-background/35 p-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={qrCodeUrl} alt="返信確認URLのQRコード" className="h-auto w-full max-w-56 rounded-md bg-night-text p-2" />
+              <p className="mt-4 max-w-sm text-center text-sm leading-7 text-night-muted">
+                このQRコードは返信確認ページにつながります。あとから再表示できないため、画像として保存しておくと安心です。
+              </p>
+            </div>
+          ) : null}
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <button
+              type="button"
+              onClick={copyReplyUrl}
+              className="w-full rounded-md bg-night-accent px-4 py-2.5 text-sm font-semibold text-night-background transition hover:bg-night-accent/90 focus:outline-none focus:ring-2 focus:ring-night-accent/35 sm:w-auto"
+            >
+              URLをコピー
+            </button>
+            <button
+              type="button"
+              onClick={saveQrCode}
+              disabled={!qrCodeUrl}
+              className="w-full rounded-md border border-night-line px-4 py-2.5 text-sm font-semibold text-night-text transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-night-accent/25 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+            >
+              QRコードを保存
+            </button>
+          </div>
           {copyMessage ? <p className="mt-3 text-sm leading-6 text-night-muted">{copyMessage}</p> : null}
+          {qrMessage ? <p className="mt-3 text-sm leading-6 text-night-muted">{qrMessage}</p> : null}
         </div>
         <p className="break-words rounded-lg border border-night-line/80 bg-night-background/30 p-4 text-sm leading-7 text-night-muted">
           このURLは再表示できません。自分だけが見られる場所に保存してください。
@@ -140,7 +219,9 @@ export function SubmitForm() {
             setMessage("");
             setSubmittedUrgency("normal");
             setReplyUrl("");
+            setQrCodeUrl("");
             setCopyMessage("");
+            setQrMessage("");
           }}
           className="rounded-md border border-night-line px-4 py-2.5 text-sm text-night-text transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-night-accent/25"
         >
