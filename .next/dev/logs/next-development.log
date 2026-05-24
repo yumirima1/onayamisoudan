@@ -11,3 +11,43 @@
 {"timestamp":"00:01:12.020","source":"Server","level":"LOG","message":"✓ Compiled in 56ms"}
 {"timestamp":"00:01:46.302","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
 {"timestamp":"00:02:44.068","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:03:37.760","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:04:56.631","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:06:17.845","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:07:33.897","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:08:57.279","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:10:18.021","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:11:40.647","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:12:41.048","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:13:31.090","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:14:38.074","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:15:24.353","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:16:30.898","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:17:12.532","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:18:27.892","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:19:08.979","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:20:26.552","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:21:38.365","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:22:42.079","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:24:11.821","source":"Server","level":"LOG","message":"✓ Compiled in 50ms"}
+{"timestamp":"00:24:13.859","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:24:22.075","source":"Server","level":"LOG","message":"✓ Compiled in 48ms"}
+{"timestamp":"00:24:31.846","source":"Server","level":"LOG","message":"✓ Compiled in 32ms"}
+{"timestamp":"00:25:07.746","source":"Server","level":"LOG","message":"✓ Compiled in 51ms"}
+{"timestamp":"00:25:08.861","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:25:17.081","source":"Server","level":"LOG","message":"✓ Compiled in 35ms"}
+{"timestamp":"00:25:34.338","source":"Server","level":"LOG","message":"✓ Compiled in 47ms"}
+{"timestamp":"00:26:11.893","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:27:04.572","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:28:05.143","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:29:03.750","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:29:53.711","source":"Server","level":"LOG","message":"✓ Compiled in 37ms"}
+{"timestamp":"00:29:59.871","source":"Server","level":"ERROR","message":"⨯ Error: Missing public Supabase environment variables."}
+{"timestamp":"00:30:00.198","source":"Server","level":"LOG","message":"✓ Compiled in 38ms"}
+{"timestamp":"00:30:55.255","source":"Server","level":"WARN","message":"⚠ Blocked cross-origin request to Next.js dev resource /_next/static/chunks/_1vk2w2b._.js from \"127.0.0.1\".\nCross-origin access to Next.js dev resources is blocked by default for safety.\n\nTo allow this host in development, add it to \"allowedDevOrigins\" in next.config.js and restart the dev server:\n\n// next.config.js\nmodule.exports = {\n  allowedDevOrigins: ['127.0.0.1'],\n}\n\nRead more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins"}
+{"timestamp":"00:30:55.256","source":"Server","level":"WARN","message":"⚠ Blocked cross-origin request to Next.js dev resource /_next/static/chunks/app_admin_login_page_tsx_0telqks._.js from \"127.0.0.1\".\nCross-origin access to Next.js dev resources is blocked by default for safety.\n\nTo allow this host in development, add it to \"allowedDevOrigins\" in next.config.js and restart the dev server:\n\n// next.config.js\nmodule.exports = {\n  allowedDevOrigins: ['127.0.0.1'],\n}\n\nRead more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins"}
+{"timestamp":"00:30:56.354","source":"Server","level":"ERROR","message":"⨯ Error: Missing server Supabase environment variables."}
+{"timestamp":"00:31:52.768","source":"Server","level":"ERROR","message":"⨯ Error: Missing server Supabase environment variables."}
+{"timestamp":"00:32:09.259","source":"Server","level":"ERROR","message":"⨯ Error: Missing server Supabase environment variables."}
+{"timestamp":"00:33:11.706","source":"Server","level":"ERROR","message":"⨯ Error: Missing server Supabase environment variables."}
+{"timestamp":"00:34:13.842","source":"Server","level":"ERROR","message":"⨯ Error: Missing server Supabase environment variables."}

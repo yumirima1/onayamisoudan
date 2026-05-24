@@ -47,27 +47,27 @@ export default function AdminPostDetailPage() {
   }, [id, router]);
 
   if (loading) {
-    return <div className="mx-auto max-w-6xl px-5 py-12 text-night-muted">読み込み中...</div>;
+    return <div className="mx-auto max-w-6xl px-4 py-10 text-night-muted sm:px-5 sm:py-12">読み込み中...</div>;
   }
 
   if (!post) {
-    return <div className="mx-auto max-w-6xl px-5 py-12 text-night-muted">{errorMessage || "投稿が見つかりません。"}</div>;
+    return <div className="mx-auto max-w-6xl px-4 py-10 text-night-muted sm:px-5 sm:py-12">{errorMessage || "投稿が見つかりません。"}</div>;
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-12">
-      <div className="rounded-lg border border-red-300/20 bg-red-950/10 p-4 text-sm leading-7 text-red-100">
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-5 sm:py-12">
+      <div className="break-words rounded-lg border border-red-300/20 bg-red-950/10 p-4 text-sm leading-7 text-red-100">
         原文を扱っています。本文を外部ログ、チャット、公開ページにそのまま貼らないでください。
       </div>
-      <section className="mt-6 rounded-lg border border-white/10 bg-night-card p-6">
-        <div className="flex flex-wrap gap-2 text-sm text-night-muted">
-          <span>{new Date(post.created_at).toLocaleString("ja-JP")}</span>
-          <span>{post.category}</span>
-          <span>{post.urgency}</span>
-          {post.nickname ? <span>nickname: {post.nickname}</span> : null}
-          {post.age_group ? <span>{post.age_group}</span> : null}
+      <section className="mt-6 min-w-0 overflow-hidden rounded-lg border border-white/10 bg-night-card p-4 sm:p-6">
+        <div className="flex min-w-0 flex-wrap gap-2 text-sm leading-6 text-night-muted">
+          <span className="break-words">{new Date(post.created_at).toLocaleString("ja-JP")}</span>
+          <span className="break-words">{post.category}</span>
+          <span className="break-words">{post.urgency}</span>
+          {post.nickname ? <span className="break-all">nickname: {post.nickname}</span> : null}
+          {post.age_group ? <span className="break-words">{post.age_group}</span> : null}
         </div>
-        <div className="mt-4 rounded-md border border-white/10 bg-black/10 p-4 text-sm leading-7 text-night-muted">
+        <div className="mt-4 min-w-0 overflow-hidden rounded-md border border-white/10 bg-black/10 p-4 text-sm leading-7 text-night-muted">
           <p className="font-semibold text-night-text">返信通知メール</p>
           {post.email ? (
             <>
@@ -78,8 +78,8 @@ export default function AdminPostDetailPage() {
             <p>メールアドレスは未入力です。</p>
           )}
         </div>
-        <h1 className="mt-4 text-2xl font-semibold text-night-text">{post.title}</h1>
-        <p className="mt-5 whitespace-pre-wrap leading-8 text-night-muted">{post.body}</p>
+        <h1 className="mt-4 break-words text-2xl font-semibold leading-tight text-night-text">{post.title}</h1>
+        <p className="mt-5 whitespace-pre-wrap break-words leading-8 text-night-muted">{post.body}</p>
       </section>
       <div className="mt-6">
         <AdminReplyEditor post={post} publicPost={publicPost} />

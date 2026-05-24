@@ -29,22 +29,22 @@ export default async function PublicArchivePage({ searchParams }: { searchParams
   const categories = Array.from(new Set(posts.map((post) => post.category)));
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-12">
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-semibold text-night-text">公開アーカイブ</h1>
-          <p className="mt-3 max-w-2xl leading-8 text-night-muted">掲載されているのは、許可を得て匿名編集した公開専用データです。</p>
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-5 sm:py-12">
+      <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="break-words text-3xl font-semibold text-night-text">公開アーカイブ</h1>
+          <p className="mt-3 max-w-2xl break-words leading-8 text-night-muted">掲載されているのは、許可を得て匿名編集した公開専用データです。</p>
         </div>
         <Suspense fallback={null}>
           <TagFilter categories={categories} basePath="/public" />
         </Suspense>
       </div>
-      <div className="mt-8 grid gap-4 md:grid-cols-2">
+      <div className="mt-8 grid min-w-0 gap-4 md:grid-cols-2">
         {posts.map((post) => (
           <PublicPostCard key={post.id} post={post} />
         ))}
       </div>
-      {posts.length === 0 ? <p className="mt-10 text-night-muted">公開中の投稿はまだありません。</p> : null}
+      {posts.length === 0 ? <p className="mt-10 break-words text-night-muted">公開中の投稿はまだありません。</p> : null}
     </div>
   );
 }

@@ -7,6 +7,10 @@ import type { AiDraft, Post, PublicPost } from "@/lib/types";
 import { SafetyNotice } from "@/components/SafetyNotice";
 
 type DraftResponse = AiDraft;
+const adminFieldClass =
+  "w-full min-w-0 rounded-md border border-white/10 bg-black/20 p-3 text-base outline-none focus:border-night-accent md:text-sm";
+const adminButtonClass =
+  "w-full rounded-md border border-white/15 px-4 py-3 text-sm text-night-text hover:bg-white/10 disabled:opacity-50 sm:w-auto";
 
 export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost: PublicPost | null }) {
   const router = useRouter();
@@ -119,87 +123,87 @@ export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost:
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
-      <section className="space-y-5 rounded-lg border border-white/10 bg-night-card p-6">
-        <h2 className="text-xl font-semibold">管理者返信</h2>
+    <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
+      <section className="min-w-0 space-y-5 overflow-hidden rounded-lg border border-white/10 bg-night-card p-4 sm:p-6">
+        <h2 className="break-words text-xl font-semibold">管理者返信</h2>
         <label className="block space-y-2 text-sm text-night-muted">
           <span>返信本文</span>
-          <textarea value={adminReply} onChange={(event) => setAdminReply(event.target.value)} rows={9} className="w-full rounded-md border border-white/10 bg-black/20 p-3 leading-7 outline-none focus:border-night-accent" />
+          <textarea value={adminReply} onChange={(event) => setAdminReply(event.target.value)} rows={9} className={`${adminFieldClass} leading-7`} />
         </label>
         <label className="block space-y-2 text-sm text-night-muted">
           <span>管理メモ</span>
-          <textarea value={adminMemo} onChange={(event) => setAdminMemo(event.target.value)} rows={5} className="w-full rounded-md border border-white/10 bg-black/20 p-3 leading-7 outline-none focus:border-night-accent" />
+          <textarea value={adminMemo} onChange={(event) => setAdminMemo(event.target.value)} rows={5} className={`${adminFieldClass} leading-7`} />
         </label>
-        <div className="flex flex-wrap gap-3">
-          <button onClick={saveReply} className="rounded-md bg-night-accent px-4 py-2 text-sm font-semibold text-white">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <button onClick={saveReply} className="w-full rounded-md bg-night-accent px-4 py-3 text-sm font-semibold text-night-background sm:w-auto">
             返信を保存
           </button>
-          <button onClick={generateDraft} disabled={!aiEnabled} className="rounded-md border border-white/15 px-4 py-2 text-sm text-night-text hover:bg-white/10 disabled:opacity-50">
+          <button onClick={generateDraft} disabled={!aiEnabled} className={adminButtonClass}>
             {aiEnabled ? "AI下書き生成" : "AI機能は未設定"}
           </button>
           <button
             onClick={notifyReply}
             disabled={!post.email || !adminReply.trim()}
-            className="rounded-md border border-white/15 px-4 py-2 text-sm text-night-text hover:bg-white/10 disabled:opacity-50"
+            className={adminButtonClass}
           >
             返信確認URLをメールで送る
           </button>
         </div>
-        <p className="text-xs leading-6 text-night-muted">
+        <p className="break-words text-xs leading-6 text-night-muted">
           {post.email
             ? notifiedAt
               ? `通知済み: ${new Date(notifiedAt).toLocaleString("ja-JP")}`
               : "返信保存後、必要に応じて通知メールを送れます。"
             : "通知メールアドレスが未入力のため、メール通知はできません。"}
         </p>
-        {status ? <p className="text-sm text-night-muted">{status}</p> : null}
+        {status ? <p className="break-words text-sm leading-7 text-night-muted">{status}</p> : null}
       </section>
 
-      <section className="space-y-5 rounded-lg border border-white/10 bg-night-card p-6">
-        <h2 className="text-xl font-semibold">公開・配信用編集</h2>
+      <section className="min-w-0 space-y-5 overflow-hidden rounded-lg border border-white/10 bg-night-card p-4 sm:p-6">
+        <h2 className="break-words text-xl font-semibold">公開・配信用編集</h2>
         <label className="block space-y-2 text-sm text-night-muted">
           <span>公開用タイトル</span>
-          <input value={publicTitle} onChange={(event) => setPublicTitle(event.target.value)} maxLength={120} className="w-full rounded-md border border-white/10 bg-black/20 p-3 outline-none focus:border-night-accent" />
+          <input value={publicTitle} onChange={(event) => setPublicTitle(event.target.value)} maxLength={120} className={adminFieldClass} />
         </label>
         <label className="block space-y-2 text-sm text-night-muted">
           <span>公開用本文</span>
-          <textarea value={publicBody} onChange={(event) => setPublicBody(event.target.value)} rows={7} className="w-full rounded-md border border-white/10 bg-black/20 p-3 leading-7 outline-none focus:border-night-accent" />
+          <textarea value={publicBody} onChange={(event) => setPublicBody(event.target.value)} rows={7} className={`${adminFieldClass} leading-7`} />
         </label>
         <label className="block space-y-2 text-sm text-night-muted">
           <span>公開用返信</span>
-          <textarea value={publicReply} onChange={(event) => setPublicReply(event.target.value)} rows={7} className="w-full rounded-md border border-white/10 bg-black/20 p-3 leading-7 outline-none focus:border-night-accent" />
+          <textarea value={publicReply} onChange={(event) => setPublicReply(event.target.value)} rows={7} className={`${adminFieldClass} leading-7`} />
         </label>
         <div className="grid gap-3 text-sm text-night-muted sm:grid-cols-2">
           <label className="block space-y-2">
             <span>公開状態</span>
-            <select value={archiveStatus} onChange={(event) => setArchiveStatus(event.target.value as "published" | "draft" | "hidden")} className="w-full rounded-md border border-white/10 bg-black/20 p-3 outline-none focus:border-night-accent">
+            <select value={archiveStatus} onChange={(event) => setArchiveStatus(event.target.value as "published" | "draft" | "hidden")} className={adminFieldClass}>
               <option value="published">公開</option>
               <option value="draft">非公開下書き</option>
               <option value="hidden">非公開</option>
             </select>
           </label>
-          <label className="flex gap-2">
+          <label className="flex min-w-0 gap-2 leading-7">
             <input type="checkbox" checked={streamUsed} onChange={(event) => setStreamUsed(event.target.checked)} />
-            配信使用済み
+            <span className="break-words">配信使用済み</span>
           </label>
         </div>
-        <div className="rounded-md border border-white/10 bg-black/10 p-4 text-sm leading-7 text-night-muted">
+        <div className="break-words rounded-md border border-white/10 bg-black/10 p-4 text-sm leading-7 text-night-muted">
           <p className="font-semibold text-night-text">個人情報マスク注意チェックリスト</p>
           <p>氏名、学校名、勤務先、住所、連絡先、具体的な日付や地名、第三者を特定できる表現を公開文から外してください。</p>
           <p>診断名や治療方針の断定に見える表現は避け、悩みの言語化と受け止めを中心にしてください。</p>
         </div>
         <label className="block space-y-2 text-sm text-night-muted">
           <span>配信URL</span>
-          <input value={streamUrl} onChange={(event) => setStreamUrl(event.target.value)} className="w-full rounded-md border border-white/10 bg-black/20 p-3 outline-none focus:border-night-accent" />
+          <input value={streamUrl} onChange={(event) => setStreamUrl(event.target.value)} className={adminFieldClass} />
         </label>
-        <button onClick={savePublicPost} className="rounded-md bg-night-accent px-4 py-2 text-sm font-semibold text-white">
+        <button onClick={savePublicPost} className="w-full rounded-md bg-night-accent px-4 py-3 text-sm font-semibold text-night-background sm:w-auto">
           公開用データを保存
         </button>
       </section>
 
       {draft ? (
-        <section className="space-y-4 rounded-lg border border-white/10 bg-night-card p-6 lg:col-span-2">
-          <h2 className="text-xl font-semibold">AI下書き</h2>
+        <section className="min-w-0 space-y-4 overflow-hidden rounded-lg border border-white/10 bg-night-card p-4 sm:p-6 lg:col-span-2">
+          <h2 className="break-words text-xl font-semibold">AI下書き</h2>
           {(draft.riskLevel === "high" || draft.riskLevel === "critical") ? <SafetyNotice compact riskLevel={draft.riskLevel} /> : null}
           <div className="grid gap-4 lg:grid-cols-2">
             <DraftBlock title="要約" body={draft.summary} />
@@ -220,9 +224,9 @@ export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost:
 
 function DraftBlock({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-md border border-white/10 bg-black/15 p-4">
-      <h3 className="font-semibold text-night-text">{title}</h3>
-      <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-night-muted">{body || "なし"}</p>
+    <div className="min-w-0 overflow-hidden rounded-md border border-white/10 bg-black/15 p-4">
+      <h3 className="break-words font-semibold text-night-text">{title}</h3>
+      <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-7 text-night-muted">{body || "なし"}</p>
     </div>
   );
 }

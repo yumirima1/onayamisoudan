@@ -4,9 +4,39 @@ import Link from "next/link";
 import type { Post } from "@/lib/types";
 
 export function AdminPostTable({ posts }: { posts: Post[] }) {
+  if (posts.length === 0) {
+    return (
+      <div className="rounded-lg border border-night-line bg-night-card p-4 text-sm leading-7 text-night-muted">
+        条件に合う投稿はありません。
+      </div>
+    );
+  }
+
   return (
-    <div className="overflow-hidden rounded-lg border border-white/10 bg-night-card">
-      <table className="w-full min-w-[760px] text-left text-sm">
+    <div className="min-w-0">
+      <div className="grid gap-3 md:hidden">
+        {posts.map((post) => (
+          <Link
+            key={post.id}
+            href={`/admin/posts/${post.id}`}
+            className="min-w-0 overflow-hidden rounded-lg border border-night-line bg-night-card p-4 transition hover:border-night-accent/60"
+          >
+            <div className="flex flex-wrap gap-2 text-xs leading-6 text-night-muted">
+              <span>{new Date(post.created_at).toLocaleString("ja-JP")}</span>
+              <span>{post.category}</span>
+              <span>{post.urgency}</span>
+              <span>{post.status}</span>
+            </div>
+            <h2 className="mt-3 break-words text-base font-semibold leading-7 text-night-text">{post.title}</h2>
+            <p className="mt-3 text-xs leading-6 text-night-muted">
+              {post.allow_public ? "公開許可あり" : "公開許可なし"} / {post.allow_stream ? "配信許可あり" : "配信許可なし"}
+            </p>
+          </Link>
+        ))}
+      </div>
+
+      <div className="hidden overflow-hidden rounded-lg border border-night-line bg-night-card md:block">
+      <table className="w-full text-left text-sm">
         <thead className="bg-white/5 text-night-muted">
           <tr>
             <th className="px-4 py-3">日時</th>
@@ -24,7 +54,7 @@ export function AdminPostTable({ posts }: { posts: Post[] }) {
               <td className="px-4 py-3">{post.urgency}</td>
               <td className="px-4 py-3 text-night-muted">{post.category}</td>
               <td className="px-4 py-3">
-                <Link href={`/admin/posts/${post.id}`} className="font-medium text-night-text hover:text-night-accent">
+                <Link href={`/admin/posts/${post.id}`} className="break-words font-medium text-night-text hover:text-night-accent">
                   {post.title}
                 </Link>
               </td>
@@ -37,6 +67,7 @@ export function AdminPostTable({ posts }: { posts: Post[] }) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

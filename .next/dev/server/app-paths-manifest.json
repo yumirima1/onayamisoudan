@@ -1,5 +1,7 @@
 {
+  "/admin/login/page": "app/admin/login/page.js",
   "/archive/page": "app/archive/page.js",
   "/page": "app/page.js",
+  "/reply/[token]/page": "app/reply/[token]/page.js",
   "/submit/page": "app/submit/page.js"
 }

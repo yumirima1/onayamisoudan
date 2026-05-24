@@ -33,12 +33,12 @@ export default async function ArchivePage({ searchParams }: { searchParams: Prom
   const categories = Array.from(new Set(posts.map((post) => post.category)));
 
   return (
-    <div className="mx-auto max-w-5xl px-5 py-10 sm:py-14">
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-5 sm:py-14">
+      <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
           <p className="text-sm font-medium tracking-[0.08em] text-night-warm">公開された手紙</p>
-          <h1 className="mt-3 text-3xl font-semibold text-night-text">公開アーカイブ</h1>
-          <p className="mt-3 max-w-2xl text-base leading-8 text-night-muted">
+          <h1 className="mt-3 break-words text-3xl font-semibold text-night-text">公開アーカイブ</h1>
+          <p className="mt-3 max-w-2xl break-words text-base leading-8 text-night-muted">
             投稿者が公開を許可した相談だけを掲載しています。個人情報や管理用の情報は公開されません。
           </p>
         </div>
@@ -49,20 +49,20 @@ export default async function ArchivePage({ searchParams }: { searchParams: Prom
 
       {error ? <p className="mt-8 rounded-lg border border-red-300/30 bg-red-950/20 p-4 text-sm leading-7 text-red-100">公開アーカイブを読み込めませんでした。</p> : null}
 
-      <div className="mt-8 grid gap-4 md:grid-cols-2">
+      <div className="mt-8 grid min-w-0 gap-4 md:grid-cols-2">
         {posts.map((post) => (
           <Link
             key={post.id}
             href={`/archive/${post.id}`}
-            className="block rounded-lg border border-night-line bg-night-card p-5 transition hover:border-night-accent/70 hover:bg-night-paper/70"
+            className="block min-w-0 overflow-hidden rounded-lg border border-night-line bg-night-card p-4 transition hover:border-night-accent/70 hover:bg-night-paper/70 sm:p-5"
           >
             <div className="flex flex-wrap items-center gap-2 text-xs leading-6 text-night-muted">
-              <span className="rounded-full border border-night-line bg-night-background/35 px-2.5 py-1">{post.category}</span>
+              <span className="max-w-full break-words rounded-full border border-night-line bg-night-background/35 px-2.5 py-1">{post.category}</span>
               <span>{new Date(post.created_at).toLocaleDateString("ja-JP")}</span>
               <span>{post.admin_reply ? "返信あり" : "返信待ち"}</span>
             </div>
-            <h2 className="mt-4 text-lg font-semibold leading-7 text-night-text">{post.title}</h2>
-            <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-night-muted">{excerpt(post.body)}</p>
+            <h2 className="mt-4 break-words text-lg font-semibold leading-7 text-night-text">{post.title}</h2>
+            <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-7 text-night-muted">{excerpt(post.body)}</p>
             <p className="mt-5 text-sm font-medium text-night-warm">読む</p>
           </Link>
         ))}

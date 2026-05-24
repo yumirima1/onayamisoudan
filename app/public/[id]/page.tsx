@@ -47,18 +47,18 @@ export default async function PublicPostPage({ params }: { params: Promise<{ id:
   const post = data as PublicPost;
 
   return (
-    <article className="mx-auto max-w-3xl px-5 py-12">
+    <article className="mx-auto max-w-3xl px-4 py-10 sm:px-5 sm:py-12">
       <div className="flex flex-wrap gap-2 text-sm text-night-muted">
-        <span>{post.category}</span>
+        <span className="max-w-full break-words">{post.category}</span>
       </div>
-      <h1 className="mt-4 text-3xl font-semibold leading-tight text-night-text">{post.public_title}</h1>
-      <section className="mt-8 rounded-lg border border-white/10 bg-night-card p-6">
+      <h1 className="mt-4 break-words text-3xl font-semibold leading-tight text-night-text">{post.public_title}</h1>
+      <section className="mt-8 min-w-0 overflow-hidden rounded-lg border border-white/10 bg-night-card p-4 sm:p-6">
         <h2 className="font-semibold text-night-text">投稿</h2>
-        <p className="mt-4 whitespace-pre-wrap leading-8 text-night-muted">{post.public_body}</p>
+        <p className="mt-4 whitespace-pre-wrap break-words leading-8 text-night-muted">{post.public_body}</p>
       </section>
-      <section className="mt-6 rounded-lg border border-white/10 bg-night-card p-6">
+      <section className="mt-6 min-w-0 overflow-hidden rounded-lg border border-white/10 bg-night-card p-4 sm:p-6">
         <h2 className="font-semibold text-night-text">返信</h2>
-        <p className="mt-4 whitespace-pre-wrap leading-8 text-night-muted">{post.public_reply}</p>
+        <p className="mt-4 whitespace-pre-wrap break-words leading-8 text-night-muted">{post.public_reply}</p>
       </section>
     </article>
   );

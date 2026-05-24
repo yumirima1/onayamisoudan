@@ -96,21 +96,21 @@ export function SubmitForm() {
 
   if (status === "done") {
     return (
-      <div className="space-y-6 rounded-lg border border-night-line bg-night-card p-5 shadow-quiet sm:p-7">
+      <div className="min-w-0 space-y-6 overflow-hidden rounded-lg border border-night-line bg-night-card p-4 shadow-quiet sm:p-7">
         <div className="space-y-3">
           <p className="text-sm text-night-warm">送信が完了しました</p>
-          <h2 className="text-2xl font-semibold leading-tight text-night-text">投稿を受け取りました</h2>
+          <h2 className="break-words text-2xl font-semibold leading-tight text-night-text">投稿を受け取りました</h2>
         </div>
-        <div className="space-y-3 text-[15px] leading-8 text-night-muted">
+        <div className="space-y-3 break-words text-[15px] leading-8 text-night-muted">
           <p>書いてくれてありがとうございます。</p>
           <p>返信には時間がかかることがあります。</p>
           <p>この場所は医療・診断・治療ではありません。</p>
           <p>今すぐ危ない場合は、身近な人・学校・地域の相談窓口・緊急窓口に頼ってください。</p>
           <p>返信がついた場合、このURLから確認できます。</p>
         </div>
-        <div className="rounded-lg border border-night-line bg-night-paper p-4 sm:p-5">
+        <div className="min-w-0 overflow-hidden rounded-lg border border-night-line bg-night-paper p-4 sm:p-5">
           <p className="text-sm font-medium text-night-text">返信確認URL</p>
-          <p className="mt-3 break-all rounded-md border border-night-line/70 bg-night-background/45 p-3 text-sm leading-7 text-night-text">
+          <p className="mt-3 max-w-full overflow-hidden break-all rounded-md border border-night-line/70 bg-night-background/45 p-3 text-sm leading-7 text-night-text">
             {replyUrl}
           </p>
           <button
@@ -122,7 +122,7 @@ export function SubmitForm() {
           </button>
           {copyMessage ? <p className="mt-3 text-sm leading-6 text-night-muted">{copyMessage}</p> : null}
         </div>
-        <p className="rounded-lg border border-night-line/80 bg-night-background/30 p-4 text-sm leading-7 text-night-muted">
+        <p className="break-words rounded-lg border border-night-line/80 bg-night-background/30 p-4 text-sm leading-7 text-night-muted">
           このURLは再表示できません。自分だけが見られる場所に保存してください。
         </p>
         {submittedUrgency === "risky" ? (
@@ -150,12 +150,12 @@ export function SubmitForm() {
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="space-y-6 rounded-lg border border-night-line bg-night-card p-5 shadow-quiet sm:p-7">
+    <form ref={formRef} onSubmit={handleSubmit} className="min-w-0 space-y-6 overflow-hidden rounded-lg border border-night-line bg-night-card p-4 shadow-quiet sm:p-7">
       <label className="hidden" aria-hidden="true">
         <span>Web site</span>
         <input name="website" tabIndex={-1} autoComplete="off" />
       </label>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid min-w-0 gap-4 sm:grid-cols-2">
         <label className={labelClass}>
           <span>ニックネーム 任意</span>
           <input name="nickname" maxLength={40} className={fieldClass} placeholder="空欄でも大丈夫です" />
@@ -208,13 +208,13 @@ export function SubmitForm() {
         </select>
       </label>
       <div className="space-y-4 rounded-lg border border-night-line/80 bg-night-background/30 p-4 text-sm leading-7 text-night-muted">
-        <label className="flex gap-3">
+        <label className="flex min-w-0 gap-3">
           <input name="allow_public" type="checkbox" className="mt-1 h-4 w-4 accent-night-accent" />
-          <span>匿名編集済みの形で、公開アーカイブに使うことを許可します。</span>
+          <span className="min-w-0 break-words">匿名編集済みの形で、公開アーカイブに使うことを許可します。</span>
         </label>
-        <label className="flex gap-3">
+        <label className="flex min-w-0 gap-3">
           <input name="allow_stream" type="checkbox" className="mt-1 h-4 w-4 accent-night-accent" />
-          <span>匿名編集済みの形で配信・紹介の候補にすることを許可します。</span>
+          <span className="min-w-0 break-words">匿名編集済みの形で配信・紹介の候補にすることを許可します。</span>
         </label>
       </div>
       <button

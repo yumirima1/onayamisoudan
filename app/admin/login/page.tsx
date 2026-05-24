@@ -41,10 +41,10 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md px-5 py-16">
-      <h1 className="text-3xl font-semibold text-night-text">管理者ログイン</h1>
-      <p className="mt-4 leading-7 text-night-muted">本番前の簡易ログインです。パスワードはサーバー側の環境変数だけで確認します。</p>
-      <form onSubmit={handleSubmit} className="mt-8 space-y-5 rounded-lg border border-white/10 bg-night-card p-6">
+    <div className="mx-auto max-w-md px-4 py-12 sm:px-5 sm:py-16">
+      <h1 className="break-words text-3xl font-semibold text-night-text">管理者ログイン</h1>
+      <p className="mt-4 break-words leading-7 text-night-muted">本番前の簡易ログインです。パスワードはサーバー側の環境変数だけで確認します。</p>
+      <form onSubmit={handleSubmit} className="mt-8 min-w-0 space-y-5 overflow-hidden rounded-lg border border-white/10 bg-night-card p-4 sm:p-6">
         <label className="block space-y-2 text-sm text-night-muted">
           <span>管理者パスワード</span>
           <input
@@ -52,14 +52,14 @@ export default function AdminLoginPage() {
             type="password"
             required
             autoComplete="current-password"
-            className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-3 outline-none focus:border-night-accent"
+            className="w-full min-w-0 rounded-md border border-white/10 bg-black/20 px-3 py-3 text-base outline-none focus:border-night-accent"
           />
         </label>
-        <button disabled={loading} className="rounded-md bg-night-accent px-5 py-3 text-sm font-semibold text-white disabled:opacity-60">
+        <button disabled={loading} className="w-full rounded-md bg-night-accent px-5 py-3 text-sm font-semibold text-night-background disabled:opacity-60 sm:w-auto">
           {loading ? "確認中..." : "ログイン"}
         </button>
         {message ? (
-          <div className="rounded-md border border-red-300/30 bg-red-950/20 p-4 text-sm text-red-100">
+          <div className="break-words rounded-md border border-red-300/30 bg-red-950/20 p-4 text-sm leading-7 text-red-100">
             <p className="font-semibold">{message}</p>
           </div>
         ) : null}

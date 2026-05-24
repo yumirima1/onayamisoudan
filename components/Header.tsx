@@ -9,18 +9,18 @@ const navItems = [
 
 export function Header() {
   return (
-    <header className="border-b border-white/10 bg-night-background/85 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
-        <Link href="/" className="text-lg font-semibold tracking-wide text-night-text">
+    <header className="border-b border-night-line bg-night-background/85 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl min-w-0 flex-col gap-4 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+        <Link href="/" className="break-words text-lg font-semibold tracking-wide text-night-text">
           よるの相談箱
         </Link>
-        <nav className="flex flex-wrap gap-3 text-sm text-night-muted">
+        <nav className="flex min-w-0 flex-wrap gap-2 text-sm leading-6 text-night-muted sm:gap-3">
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className="rounded-full px-3 py-1.5 hover:bg-white/10 hover:text-night-text">
+            <Link key={item.href} href={item.href} className="max-w-full rounded-full px-3 py-1.5 transition hover:bg-white/10 hover:text-night-text">
               {item.label}
             </Link>
           ))}
-          <Link href="/admin/login" className="rounded-full px-3 py-1.5 hover:bg-white/10 hover:text-night-text">
+          <Link href="/admin/login" className="max-w-full rounded-full px-3 py-1.5 transition hover:bg-white/10 hover:text-night-text">
             管理者
           </Link>
         </nav>
