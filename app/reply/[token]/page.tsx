@@ -4,11 +4,9 @@ import { hashReplyToken } from "@/lib/replyToken";
 import { createServiceSupabase } from "@/lib/supabaseServer";
 
 type ReplyPost = {
-  title: string;
-  category: string;
+  created_at: string;
   body: string;
   admin_reply: string | null;
-  replied_at: string | null;
 };
 
 export const dynamic = "force-dynamic";
@@ -32,7 +30,7 @@ export default async function ReplyPage({ params }: { params: Promise<{ token: s
   const supabase = createServiceSupabase();
   const { data } = await supabase
     .from("posts")
-    .select("title, category, body, admin_reply, replied_at")
+    .select("created_at, body, admin_reply")
     .eq("reply_token_hash", hashReplyToken(token))
     .maybeSingle<ReplyPost>();
 
@@ -41,28 +39,36 @@ export default async function ReplyPage({ params }: { params: Promise<{ token: s
   }
 
   return (
-    <article className="mx-auto max-w-3xl px-5 py-12">
-      <div className="rounded-lg border border-white/10 bg-night-card p-4 text-sm leading-7 text-night-muted">
+    <article className="mx-auto max-w-2xl px-5 py-10 sm:py-14">
+      <header className="space-y-4">
+        <p className="text-sm leading-7 text-night-muted">このURLを知っている本人だけ確認できます。他の人には共有しないでください。</p>
+        <h1 className="text-2xl font-semibold leading-tight text-night-text sm:text-3xl">返信確認</h1>
+      </header>
+
+      <div className="mt-6 rounded-lg border border-white/10 bg-night-card p-4 text-sm leading-7 text-night-muted">
         この場所は医療・診断・治療ではありません。今すぐ危ない場合は、身近な人・学校・地域の相談窓口・緊急窓口に頼ってください。
       </div>
 
-      <div className="mt-8 flex flex-wrap gap-2 text-sm text-night-muted">
-        <span>{data.category}</span>
-        {data.replied_at ? <span>返信日: {new Date(data.replied_at).toLocaleDateString("ja-JP")}</span> : null}
-      </div>
-      <h1 className="mt-4 text-3xl font-semibold leading-tight text-night-text">{data.title}</h1>
-
-      <section className="mt-8 rounded-lg border border-white/10 bg-night-card p-6">
-        <h2 className="font-semibold text-night-text">投稿</h2>
-        <p className="mt-4 whitespace-pre-wrap leading-8 text-night-muted">{data.body}</p>
+      <section className="mt-8">
+        <p className="text-sm text-night-muted">投稿日: {new Date(data.created_at).toLocaleString("ja-JP")}</p>
+        <h2 className="mt-5 text-lg font-semibold text-night-text">投稿本文</h2>
+        <div className="mt-4 rounded-lg border border-white/10 bg-night-card p-5 sm:p-6">
+          <p className="whitespace-pre-wrap text-base leading-9 text-night-muted">{data.body}</p>
+        </div>
       </section>
 
-      <section className="mt-6 rounded-lg border border-white/10 bg-night-card p-6">
-        <h2 className="font-semibold text-night-text">返信</h2>
+      <div className="my-8 border-t border-white/10" />
+
+      <section>
+        <h2 className="text-lg font-semibold text-night-text">管理者返信</h2>
         {data.admin_reply ? (
-          <p className="mt-4 whitespace-pre-wrap leading-8 text-night-muted">{data.admin_reply}</p>
+          <div className="mt-4 rounded-lg border border-white/10 bg-night-card p-5 sm:p-6">
+            <p className="whitespace-pre-wrap text-base leading-9 text-night-muted">{data.admin_reply}</p>
+          </div>
         ) : (
-          <p className="mt-4 leading-8 text-night-muted">まだ返信はありません。</p>
+          <div className="mt-4 rounded-lg border border-white/10 bg-night-card p-5 sm:p-6">
+            <p className="leading-8 text-night-muted">まだ返信はありません。返信には時間がかかることがあります。</p>
+          </div>
         )}
       </section>
     </article>
