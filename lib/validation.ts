@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const submitPostSchema = z.object({
   nickname: z.string().trim().max(40).optional().nullable(),
+  email: z.string().trim().email().max(254).optional().nullable(),
   age_group: z.enum(["中学生", "高校生", "大学生", "社会人", "その他", "答えたくない"]).optional().nullable(),
   category: z.enum(["学校", "人間関係", "家族", "恋愛", "将来", "気分", "ただ聞いてほしい", "その他"]),
   title: z.string().trim().min(1).max(80),

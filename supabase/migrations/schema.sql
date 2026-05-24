@@ -11,6 +11,7 @@ create table if not exists public.admin_profiles (
 create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),
   nickname text,
+  email text check (email is null or char_length(email) <= 254),
   age_group text,
   category text not null,
   title text not null check (char_length(title) between 1 and 80),
@@ -29,7 +30,8 @@ create table if not exists public.posts (
   ai_drafts jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  replied_at timestamptz
+  replied_at timestamptz,
+  reply_notified_at timestamptz
 );
 
 create table if not exists public.public_posts (
@@ -190,6 +192,7 @@ to anon, authenticated
 with check (
   char_length(title) between 1 and 80
   and char_length(body) between 1 and 2000
+  and (email is null or char_length(email) <= 254)
   and urgency in ('normal', 'soon', 'risky')
 );
 

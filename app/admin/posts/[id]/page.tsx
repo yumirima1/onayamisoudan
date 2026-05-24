@@ -67,6 +67,17 @@ export default function AdminPostDetailPage() {
           {post.nickname ? <span>nickname: {post.nickname}</span> : null}
           {post.age_group ? <span>{post.age_group}</span> : null}
         </div>
+        <div className="mt-4 rounded-md border border-white/10 bg-black/10 p-4 text-sm leading-7 text-night-muted">
+          <p className="font-semibold text-night-text">返信通知メール</p>
+          {post.email ? (
+            <>
+              <p className="break-all">{post.email}</p>
+              <p>{post.reply_notified_at ? `通知済み: ${new Date(post.reply_notified_at).toLocaleString("ja-JP")}` : "まだ通知していません。"}</p>
+            </>
+          ) : (
+            <p>メールアドレスは未入力です。</p>
+          )}
+        </div>
         <h1 className="mt-4 text-2xl font-semibold text-night-text">{post.title}</h1>
         <p className="mt-5 whitespace-pre-wrap leading-8 text-night-muted">{post.body}</p>
       </section>

@@ -1,0 +1,74 @@
+type SendReplyNotificationInput = {
+  to: string;
+  siteUrl: string;
+};
+
+type SendReplyNotificationResult =
+  | {
+      ok: true;
+      sent: true;
+      mocked: false;
+    }
+  | {
+      ok: true;
+      sent: false;
+      mocked: true;
+      reason: string;
+    }
+  | {
+      ok: false;
+      sent: false;
+      mocked: false;
+      error: string;
+    };
+
+export async function sendReplyNotificationEmail({ to, siteUrl }: SendReplyNotificationInput): Promise<SendReplyNotificationResult> {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const from = process.env.EMAIL_FROM;
+
+  if (!resendApiKey || !from) {
+    return {
+      ok: true,
+      sent: false,
+      mocked: true,
+      reason: "RESEND_API_KEY または EMAIL_FROM が未設定のため、メールは実送信していません。"
+    };
+  }
+
+  const text = [
+    "よるの相談箱に返信が届きました。",
+    "",
+    "相談内容や返信本文は、このメールには載せていません。",
+    "サイトで確認してください。",
+    siteUrl
+  ].join("\n");
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      from,
+      to,
+      subject: "よるの相談箱に返信が届きました",
+      text
+    })
+  });
+
+  if (!response.ok) {
+    return {
+      ok: false,
+      sent: false,
+      mocked: false,
+      error: "メール送信サービスでエラーが発生しました。"
+    };
+  }
+
+  return {
+    ok: true,
+    sent: true,
+    mocked: false
+  };
+}

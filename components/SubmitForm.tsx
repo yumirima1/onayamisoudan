@@ -20,6 +20,7 @@ export function SubmitForm() {
     const urgency = String(formData.get("urgency") ?? "normal");
     const parsed = submitPostSchema.safeParse({
       nickname: normalizeEmpty(String(formData.get("nickname") ?? "")),
+      email: normalizeEmpty(String(formData.get("email") ?? "")),
       age_group: normalizeEmpty(String(formData.get("age_group") ?? "")),
       category: String(formData.get("category") ?? ""),
       title: String(formData.get("title") ?? ""),
@@ -94,6 +95,19 @@ export function SubmitForm() {
           </select>
         </label>
       </div>
+      <label className="space-y-2 text-sm text-night-muted">
+        <span>返信通知を受け取るメールアドレス 任意</span>
+        <input
+          name="email"
+          type="email"
+          maxLength={254}
+          autoComplete="email"
+          className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-3 outline-none focus:border-night-accent"
+        />
+        <span className="block text-xs leading-6 text-night-muted">
+          管理者が返信したことをお知らせするためだけに使います。メール本文に相談内容や返信本文は載せません。
+        </span>
+      </label>
       <label className="space-y-2 text-sm text-night-muted">
         <span>カテゴリ 必須</span>
         <select name="category" required className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-3 outline-none focus:border-night-accent">

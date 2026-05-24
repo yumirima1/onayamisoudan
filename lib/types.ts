@@ -6,6 +6,7 @@ export type Post = {
   id: string;
   created_at: string;
   nickname: string | null;
+  email?: string | null;
   age_group: string | null;
   category: string;
   title: string;
@@ -23,6 +24,7 @@ export type Post = {
   ai_drafts: Record<string, unknown> | null;
   status: PostStatus;
   replied_at: string | null;
+  reply_notified_at?: string | null;
 };
 
 export type PublicPost = {

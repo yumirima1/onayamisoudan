@@ -19,6 +19,7 @@ export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost:
   const [streamUsed, setStreamUsed] = useState(publicPost?.is_stream_used ?? false);
   const [streamUrl, setStreamUrl] = useState(publicPost?.stream_url ?? "");
   const [status, setStatus] = useState("");
+  const [notifiedAt, setNotifiedAt] = useState(post.reply_notified_at ?? null);
   const [draft, setDraft] = useState<DraftResponse | null>(null);
   const [aiEnabled, setAiEnabled] = useState(false);
 
@@ -99,6 +100,24 @@ export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost:
     setStatus("AI下書きを生成しました。保存前に必ず管理者が確認してください。");
   }
 
+  async function notifyReply() {
+    setStatus("通知メールを送信中...");
+
+    try {
+      const result = await adminJsonFetch<{ sent: boolean; mocked: boolean; message?: string; replyNotifiedAt?: string }>(`/api/admin/posts/${post.id}/notify`, {
+        method: "POST"
+      });
+
+      if (result.replyNotifiedAt) {
+        setNotifiedAt(result.replyNotifiedAt);
+      }
+
+      setStatus(result.mocked ? (result.message ?? "メール送信サービス未設定のため、実送信はしていません。") : "通知メールを送信しました。");
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "通知メールを送信できませんでした。");
+    }
+  }
+
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
       <section className="space-y-5 rounded-lg border border-white/10 bg-night-card p-6">
@@ -118,7 +137,21 @@ export function AdminReplyEditor({ post, publicPost }: { post: Post; publicPost:
           <button onClick={generateDraft} disabled={!aiEnabled} className="rounded-md border border-white/15 px-4 py-2 text-sm text-night-text hover:bg-white/10 disabled:opacity-50">
             {aiEnabled ? "AI下書き生成" : "AI機能は未設定"}
           </button>
+          <button
+            onClick={notifyReply}
+            disabled={!post.email || !adminReply.trim()}
+            className="rounded-md border border-white/15 px-4 py-2 text-sm text-night-text hover:bg-white/10 disabled:opacity-50"
+          >
+            通知メールを送る
+          </button>
         </div>
+        <p className="text-xs leading-6 text-night-muted">
+          {post.email
+            ? notifiedAt
+              ? `通知済み: ${new Date(notifiedAt).toLocaleString("ja-JP")}`
+              : "返信保存後、必要に応じて通知メールを送れます。"
+            : "通知メールアドレスが未入力のため、メール通知はできません。"}
+        </p>
         {status ? <p className="text-sm text-night-muted">{status}</p> : null}
       </section>
 
