@@ -6,13 +6,13 @@ import { checkRateLimit } from "@/lib/rateLimit";
 export async function GET() {
   return NextResponse.json({
     enabled: isAiEnabled(),
-    message: isAiEnabled() ? "AI機能は将来実装用に準備されています。" : "AI機能は未設定です。"
+    message: isAiEnabled() ? "下書き補助は将来実装用に準備されています。" : "下書き補助は未設定です。"
   });
 }
 
 export async function POST(request: NextRequest) {
   if (!isAiEnabled()) {
-    return NextResponse.json({ error: "AI機能は未設定です。" }, { status: 503 });
+    return NextResponse.json({ error: "下書き補助は未設定です。" }, { status: 503 });
   }
 
   const auth = requireAdminFromRequest(request);
@@ -45,8 +45,8 @@ export async function POST(request: NextRequest) {
   try {
     await generateAdminDraft();
   } catch {
-    return NextResponse.json({ error: "AI下書き生成は今後実装予定です。" }, { status: 501 });
+    return NextResponse.json({ error: "下書き補助は今後実装予定です。" }, { status: 501 });
   }
 
-  return NextResponse.json({ error: "AI下書き生成は今後実装予定です。" }, { status: 501 });
+  return NextResponse.json({ error: "下書き補助は今後実装予定です。" }, { status: 501 });
 }

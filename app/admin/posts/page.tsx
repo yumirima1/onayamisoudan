@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AdminPostTable } from "@/components/AdminPostTable";
 import { adminJsonFetch, verifyAdminSession } from "@/lib/adminSessionClient";
+import { urgencyLabel } from "@/lib/displayLabels";
 import type { Post } from "@/lib/types";
 
 export default function AdminPostsPage() {
@@ -74,13 +75,13 @@ function AdminPostsContent() {
           <option value="all">状態すべて</option>
           <option value="unreplied">未返信</option>
           <option value="replied">返信済み</option>
-          <option value="hidden">hidden</option>
+          <option value="hidden">非表示</option>
         </select>
         <select value={urgencyFilter} onChange={(event) => setParam("urgency", event.target.value)} className="min-w-0 rounded-md border border-white/10 bg-black/20 px-3 py-3 text-base outline-none focus:border-night-accent md:text-sm">
           <option value="all">緊急度すべて</option>
-          <option value="normal">normal</option>
-          <option value="soon">soon</option>
-          <option value="risky">risky</option>
+          <option value="normal">{urgencyLabel("normal")}</option>
+          <option value="soon">{urgencyLabel("soon")}</option>
+          <option value="risky">{urgencyLabel("risky")}</option>
         </select>
         <select value={categoryFilter} onChange={(event) => setParam("category", event.target.value)} className="min-w-0 rounded-md border border-white/10 bg-black/20 px-3 py-3 text-base outline-none focus:border-night-accent md:text-sm">
           <option value="all">カテゴリすべて</option>
@@ -89,14 +90,14 @@ function AdminPostsContent() {
           ))}
         </select>
         <select value={allowPublicFilter} onChange={(event) => setParam("allow_public", event.target.value)} className="min-w-0 rounded-md border border-white/10 bg-black/20 px-3 py-3 text-base outline-none focus:border-night-accent md:text-sm">
-          <option value="all">公開許可すべて</option>
-          <option value="true">公開許可あり</option>
-          <option value="false">公開許可なし</option>
+          <option value="all">公開希望すべて</option>
+          <option value="true">公開希望あり</option>
+          <option value="false">公開希望なし</option>
         </select>
         <select value={allowStreamFilter} onChange={(event) => setParam("allow_stream", event.target.value)} className="min-w-0 rounded-md border border-white/10 bg-black/20 px-3 py-3 text-base outline-none focus:border-night-accent md:text-sm">
-          <option value="all">配信許可すべて</option>
-          <option value="true">配信許可あり</option>
-          <option value="false">配信許可なし</option>
+          <option value="all">配信希望すべて</option>
+          <option value="true">配信希望あり</option>
+          <option value="false">配信希望なし</option>
         </select>
         <input defaultValue={search} onBlur={(event) => setParam("q", event.target.value)} placeholder="タイトル検索" className="min-w-0 rounded-md border border-white/10 bg-black/20 px-3 py-3 text-base outline-none focus:border-night-accent md:text-sm" />
       </div>

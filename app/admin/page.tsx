@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { adminJsonFetch, logoutAdminSession, verifyAdminSession } from "@/lib/adminSessionClient";
+import { urgencyLabel } from "@/lib/displayLabels";
 import type { Post } from "@/lib/types";
 
 export default function AdminPage() {
@@ -21,7 +22,7 @@ export default function AdminPage() {
         return;
       }
 
-      setDiagnostic("簡易管理ログイン確認済み。管理データはサーバーAPI経由で取得しています。");
+      setDiagnostic("管理ログイン確認済み。管理データはサーバーAPI経由で取得しています。");
       const data = await adminJsonFetch<{ posts: Post[] }>("/api/admin/posts?limit=50");
       setPosts(data.posts);
       setLoading(false);
@@ -38,8 +39,8 @@ export default function AdminPage() {
 
   const cards = [
     { label: "未返信", value: posts.filter((post) => post.status === "unreplied").length, href: "/admin/posts?status=unreplied" },
-    { label: "緊急度高め", value: posts.filter((post) => post.urgency === "risky" || post.urgency === "soon").length, href: "/admin/posts?urgency=risky" },
-    { label: "公開許可あり", value: posts.filter((post) => post.allow_public).length, href: "/admin/posts?allow_public=true" },
+    { label: "早めの確認が必要", value: posts.filter((post) => post.urgency === "risky" || post.urgency === "soon").length, href: "/admin/posts?urgency=risky" },
+    { label: "公開希望あり", value: posts.filter((post) => post.allow_public).length, href: "/admin/posts?allow_public=true" },
     { label: "配信許可あり", value: posts.filter((post) => post.allow_stream).length, href: "/admin/posts?allow_stream=true" }
   ];
 
@@ -76,6 +77,9 @@ export default function AdminPage() {
           </Link>
         ))}
       </div>
+      <p className="mt-6 text-xs leading-6 text-night-muted">
+        緊急度の表示例: {urgencyLabel("normal")} / {urgencyLabel("soon")} / {urgencyLabel("risky")}
+      </p>
     </div>
   );
 }

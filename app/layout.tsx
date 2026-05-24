@@ -9,13 +9,21 @@ export const metadata: Metadata = {
     default: "よるの相談箱",
     template: "%s | よるの相談箱"
   },
-  description: "匿名で悩みを言葉にできる、夜の投稿サイト。",
+  description: "匿名で悩みを静かに書き、管理者からの返信を専用URLで確認できる、夜の匿名相談箱です。",
+  alternates: {
+    canonical: "/"
+  },
   openGraph: {
     title: "よるの相談箱",
-    description: "匿名で悩みを言葉にできる、夜の投稿サイト。",
+    description: "匿名で悩みを静かに書き、管理者からの返信を専用URLで確認できる、夜の匿名相談箱です。",
     type: "website",
     locale: "ja_JP",
     siteName: "よるの相談箱"
+  },
+  twitter: {
+    card: "summary",
+    title: "よるの相談箱",
+    description: "匿名で悩みを静かに書ける、深夜の手紙箱のような相談場所です。"
   },
   robots: {
     index: true,

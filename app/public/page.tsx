@@ -8,8 +8,11 @@ import type { PublicPost } from "@/lib/types";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "みんなの悩み",
-  description: "匿名編集済みの悩みと返信を読める公開アーカイブです。"
+  title: "公開アーカイブ",
+  description: "投稿者が公開を希望し、管理者が確認した匿名相談を読めるアーカイブです。",
+  alternates: {
+    canonical: "/public"
+  }
 };
 
 export default async function PublicArchivePage({ searchParams }: { searchParams: { category?: string } }) {
@@ -33,7 +36,9 @@ export default async function PublicArchivePage({ searchParams }: { searchParams
       <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
           <h1 className="break-words text-3xl font-semibold text-night-text">公開アーカイブ</h1>
-          <p className="mt-3 max-w-2xl break-words leading-8 text-night-muted">掲載されているのは、許可を得て匿名編集した公開専用データです。</p>
+          <p className="mt-3 max-w-2xl break-words leading-8 text-night-muted">
+            掲載されているのは、投稿者が公開を希望し、管理者が確認した公開用データです。
+          </p>
         </div>
         <Suspense fallback={null}>
           <TagFilter categories={categories} basePath="/public" />
@@ -44,7 +49,7 @@ export default async function PublicArchivePage({ searchParams }: { searchParams
           <PublicPostCard key={post.id} post={post} />
         ))}
       </div>
-      {posts.length === 0 ? <p className="mt-10 break-words text-night-muted">公開中の投稿はまだありません。</p> : null}
+      {posts.length === 0 ? <p className="mt-10 break-words text-night-muted">公開中の手紙はまだありません。</p> : null}
     </div>
   );
 }

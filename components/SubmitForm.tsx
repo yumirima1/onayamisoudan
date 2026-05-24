@@ -203,8 +203,8 @@ export function SubmitForm() {
         <span>緊急度 必須</span>
         <select name="urgency" required defaultValue="normal" className={fieldClass}>
           <option value="normal">通常</option>
-          <option value="soon">早めに見てほしい</option>
-          <option value="risky">今すぐ危ないかもしれない</option>
+          <option value="soon">少し早めに見てほしい</option>
+          <option value="risky">公開しない方がいい内容かも</option>
         </select>
       </label>
       <div className="space-y-4 rounded-lg border border-night-line/80 bg-night-background/30 p-4 text-sm leading-7 text-night-muted">

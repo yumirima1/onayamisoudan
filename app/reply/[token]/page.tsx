@@ -12,7 +12,7 @@ type ReplyPost = {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "返信確認 | よるの相談箱",
+  title: "返信確認",
   description: "投稿者本人向けの返信確認ページです。"
 };
 

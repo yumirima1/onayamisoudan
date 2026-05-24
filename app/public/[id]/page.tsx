@@ -16,14 +16,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     .single();
 
   if (!data) {
-    return { title: "公開投稿 | よるの相談箱" };
+    return { title: "公開アーカイブ" };
   }
 
   return {
-    title: `${data.public_title} | よるの相談箱`,
+    title: String(data.public_title),
     description: String(data.public_body).slice(0, 120),
     openGraph: {
-      title: `${data.public_title} | よるの相談箱`,
+      title: String(data.public_title),
       description: String(data.public_body).slice(0, 120),
       type: "article"
     }

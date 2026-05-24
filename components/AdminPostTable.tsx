@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { postStatusLabel, publicWishLabel, urgencyLabel } from "@/lib/displayLabels";
 import type { Post } from "@/lib/types";
 
 export function AdminPostTable({ posts }: { posts: Post[] }) {
@@ -24,12 +25,12 @@ export function AdminPostTable({ posts }: { posts: Post[] }) {
             <div className="flex flex-wrap gap-2 text-xs leading-6 text-night-muted">
               <span>{new Date(post.created_at).toLocaleString("ja-JP")}</span>
               <span>{post.category}</span>
-              <span>{post.urgency}</span>
-              <span>{post.status}</span>
+              <span>{urgencyLabel(post.urgency)}</span>
+              <span>{postStatusLabel(post.status)}</span>
             </div>
             <h2 className="mt-3 break-words text-base font-semibold leading-7 text-night-text">{post.title}</h2>
             <p className="mt-3 text-xs leading-6 text-night-muted">
-              {post.allow_public ? "公開許可あり" : "公開許可なし"} / {post.allow_stream ? "配信許可あり" : "配信許可なし"}
+              {publicWishLabel(post.allow_public)} / {post.allow_stream ? "配信希望あり" : "配信希望なし"}
             </p>
           </Link>
         ))}
@@ -51,7 +52,7 @@ export function AdminPostTable({ posts }: { posts: Post[] }) {
           {posts.map((post) => (
             <tr key={post.id} className="hover:bg-white/[0.03]">
               <td className="px-4 py-3 text-night-muted">{new Date(post.created_at).toLocaleString("ja-JP")}</td>
-              <td className="px-4 py-3">{post.urgency}</td>
+              <td className="px-4 py-3">{urgencyLabel(post.urgency)}</td>
               <td className="px-4 py-3 text-night-muted">{post.category}</td>
               <td className="px-4 py-3">
                 <Link href={`/admin/posts/${post.id}`} className="break-words font-medium text-night-text hover:text-night-accent">
@@ -59,10 +60,10 @@ export function AdminPostTable({ posts }: { posts: Post[] }) {
                 </Link>
               </td>
               <td className="px-4 py-3 text-night-muted">
-                {post.allow_public ? "公開 " : ""}
-                {post.allow_stream ? "配信" : ""}
+                {post.allow_public ? "公開希望 " : ""}
+                {post.allow_stream ? "配信希望" : ""}
               </td>
-              <td className="px-4 py-3 text-night-muted">{post.status}</td>
+              <td className="px-4 py-3 text-night-muted">{postStatusLabel(post.status)}</td>
             </tr>
           ))}
         </tbody>

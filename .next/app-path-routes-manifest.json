@@ -24,6 +24,8 @@
   "/archive/[id]/page": "/archive/[id]",
   "/archive/page": "/archive",
   "/guideline/page": "/guideline",
+  "/icon.svg/route": "/icon.svg",
+  "/manifest.webmanifest/route": "/manifest.webmanifest",
   "/page": "/",
   "/privacy/page": "/privacy",
   "/public/[id]/page": "/public/[id]",

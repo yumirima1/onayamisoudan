@@ -24,6 +24,8 @@
   "/archive/[id]/page": "app/archive/[id]/page.js",
   "/archive/page": "app/archive/page.js",
   "/guideline/page": "app/guideline/page.js",
+  "/icon.svg/route": "app/icon.svg/route.js",
+  "/manifest.webmanifest/route": "app/manifest.webmanifest/route.js",
   "/page": "app/page.js",
   "/privacy/page": "app/privacy/page.js",
   "/public/[id]/page": "app/public/[id]/page.js",

@@ -43,8 +43,11 @@ export default function AdminLoginPage() {
   return (
     <div className="mx-auto max-w-md px-4 py-12 sm:px-5 sm:py-16">
       <h1 className="break-words text-3xl font-semibold text-night-text">管理者ログイン</h1>
-      <p className="mt-4 break-words leading-7 text-night-muted">本番前の簡易ログインです。パスワードはサーバー側の環境変数だけで確認します。</p>
+      <p className="mt-4 break-words leading-7 text-night-muted">
+        管理者用パスワードをサーバー側で確認し、ログイン中は httpOnly Cookie で管理します。Supabase Auth は使っていません。
+      </p>
       <form onSubmit={handleSubmit} className="mt-8 min-w-0 space-y-5 overflow-hidden rounded-lg border border-white/10 bg-night-card p-4 sm:p-6">
+        <input name="username" type="text" autoComplete="username" defaultValue="admin" className="hidden" tabIndex={-1} aria-hidden="true" />
         <label className="block space-y-2 text-sm text-night-muted">
           <span>管理者パスワード</span>
           <input

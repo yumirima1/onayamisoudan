@@ -11,14 +11,17 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { data } = await supabase.from("archive_posts_view").select("title, body").eq("id", id).maybeSingle();
 
   if (!data) {
-    return { title: "公開投稿 | よるの相談箱" };
+    return { title: "公開アーカイブ" };
   }
 
   return {
-    title: `${data.title} | よるの相談箱`,
+    title: String(data.title),
     description: String(data.body).slice(0, 120),
+    alternates: {
+      canonical: `/archive/${id}`
+    },
     openGraph: {
-      title: `${data.title} | よるの相談箱`,
+      title: String(data.title),
       description: String(data.body).slice(0, 120),
       type: "article"
     }

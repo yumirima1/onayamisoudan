@@ -4,7 +4,10 @@ import { SubmitForm } from "@/components/SubmitForm";
 
 export const metadata: Metadata = {
   title: "悩みを送る",
-  description: "匿名で悩みを投稿できます。原文は管理者だけが確認します。"
+  description: "匿名で悩みを投稿できます。原文は管理者だけが確認します。",
+  alternates: {
+    canonical: "/submit"
+  }
 };
 
 export default function SubmitPage() {

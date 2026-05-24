@@ -9,7 +9,10 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "公開アーカイブ",
-  description: "公開許可された匿名相談を読めるアーカイブです。"
+  description: "投稿者が公開を希望し、管理者が確認した匿名相談を読めるアーカイブです。",
+  alternates: {
+    canonical: "/archive"
+  }
 };
 
 function excerpt(body: string) {
@@ -39,7 +42,7 @@ export default async function ArchivePage({ searchParams }: { searchParams: Prom
           <p className="text-sm font-medium tracking-[0.08em] text-night-warm">公開された手紙</p>
           <h1 className="mt-3 break-words text-3xl font-semibold text-night-text">公開アーカイブ</h1>
           <p className="mt-3 max-w-2xl break-words text-base leading-8 text-night-muted">
-            投稿者が公開を許可した相談だけを掲載しています。個人情報や管理用の情報は公開されません。
+            投稿者が公開を希望し、管理者が確認した相談だけを掲載しています。個人情報や管理用の情報は公開されません。
           </p>
         </div>
         <Suspense fallback={null}>
@@ -59,7 +62,7 @@ export default async function ArchivePage({ searchParams }: { searchParams: Prom
             <div className="flex flex-wrap items-center gap-2 text-xs leading-6 text-night-muted">
               <span className="max-w-full break-words rounded-full border border-night-line bg-night-background/35 px-2.5 py-1">{post.category}</span>
               <span>{new Date(post.created_at).toLocaleDateString("ja-JP")}</span>
-              <span>{post.admin_reply ? "返信あり" : "返信待ち"}</span>
+              <span>{post.admin_reply ? "返信あり" : "まだ返信はありません"}</span>
             </div>
             <h2 className="mt-4 break-words text-lg font-semibold leading-7 text-night-text">{post.title}</h2>
             <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-7 text-night-muted">{excerpt(post.body)}</p>
@@ -69,7 +72,7 @@ export default async function ArchivePage({ searchParams }: { searchParams: Prom
       </div>
 
       {!error && posts.length === 0 ? (
-        <p className="mt-10 rounded-lg border border-night-line bg-night-card p-5 text-sm leading-7 text-night-muted">公開中の投稿はまだありません。</p>
+        <p className="mt-10 rounded-lg border border-night-line bg-night-card p-5 text-sm leading-7 text-night-muted">公開中の手紙はまだありません。</p>
       ) : null}
     </div>
   );

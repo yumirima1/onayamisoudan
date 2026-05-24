@@ -10,9 +10,9 @@
 - TypeScript
 - Tailwind CSS
 - Supabase Database
-- Supabase Auth
+- 管理者ログインは `ADMIN_PASSWORD` + httpOnly Cookie
 - Vercel
-- AI機能は初期OFF対応
+- 下書き補助は初期OFF対応
 
 ## セットアップ手順
 
@@ -31,11 +31,14 @@ npm run dev
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SECRET_KEY=
+ADMIN_PASSWORD=
 APP_BASE_URL=http://localhost:3000
 OPENAI_API_KEY=
 ```
 
-`OPENAI_API_KEY` は空でも動きます。空の場合、管理画面には「AI機能は未設定」と表示され、AI下書きAPIも無効になります。
+`ADMIN_PASSWORD` は管理画面ログインに使います。`NEXT_PUBLIC_` 付きの環境変数には入れないでください。
+
+`OPENAI_API_KEY` は空でも動きます。空の場合、管理画面には「下書き補助は未設定」と表示され、下書き補助APIも無効になります。
 
 ## Supabaseプロジェクト作成方法
 
@@ -43,7 +46,7 @@ OPENAI_API_KEY=
 2. Project Settings から `Project URL` を `NEXT_PUBLIC_SUPABASE_URL` に設定します。
 3. API Keys から publishable key を `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` に設定します。
 4. server-only の secret/service key を `SUPABASE_SECRET_KEY` に設定します。
-5. Authentication の Email login を有効にします。
+5. 管理者ログインには Supabase Auth を使いません。管理画面は `ADMIN_PASSWORD` と httpOnly Cookie で保護します。
 
 ## Supabase RLS適用方法
 
@@ -63,18 +66,13 @@ OPENAI_API_KEY=
 - 管理者だけが原文と公開データを管理可能
 - `public_posts_view` は `security_invoker=true`
 
-## 管理者ユーザー作成方法
+## 管理者ログイン設定方法
 
-1. Supabase Authentication で管理者ユーザーを作成します。
-2. 作成したユーザーの UUID を確認します。
-3. SQL Editor で `admin_profiles` に追加します。
+1. Vercel の Environment Variables に `ADMIN_PASSWORD` を登録します。
+2. `/admin/login` で管理者パスワードを入力します。
+3. ログイン後は httpOnly Cookie の `admin_session` で管理画面を保護します。
 
-```sql
-insert into public.admin_profiles (id, display_name, role, is_active)
-values ('AUTH_USER_ID_HERE', '管理者名', 'owner', true);
-```
-
-共有管理者パスワードは禁止です。管理者ごとにSupabase Authの個別アカウントを作成してください。
+管理者パスワードはフロント側や `NEXT_PUBLIC_` 付き環境変数に入れないでください。
 
 ## GitHubにpushする方法
 
@@ -102,6 +100,7 @@ Production / Preview / Development の必要な環境に以下を設定します
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SECRET_KEY=
+ADMIN_PASSWORD=
 APP_BASE_URL=https://your-domain.vercel.app
 OPENAI_API_KEY=
 ```
@@ -112,8 +111,7 @@ OPENAI_API_KEY=
 
 1. 環境変数を保存します。
 2. Deploy を実行します。
-3. Supabase Authentication の Site URL と Redirect URLs に Vercel のURLを追加します。
-4. `/admin/login` から管理者ログインを確認します。
+3. `/admin/login` から管理者ログインを確認します。
 
 ## Google Search Console登録手順
 
@@ -134,12 +132,12 @@ https://your-domain.vercel.app/sitemap.xml
 
 - `/`
 - `/submit`
-- `/public`
+- `/archive`
 - `/about`
 - `/guideline`
 - `/privacy`
 - `/terms`
-- 公開済み `public_posts` の詳細ページ
+- 公開アーカイブ詳細ページ
 
 `robots.txt` は `/admin` 配下をクロール禁止にし、sitemap URLを記載します。
 
@@ -151,7 +149,7 @@ https://your-domain.vercel.app/sitemap.xml
 
 ## 個人情報を公開しない注意
 
-公開や配信に使う文章は、必ず `public_posts` に匿名編集済みで保存してください。
+公開アーカイブに載せる文章は、投稿者が公開を希望し、管理者が確認したものだけにしてください。
 
 公開前に以下を確認してください。
 
@@ -162,13 +160,13 @@ https://your-domain.vercel.app/sitemap.xml
 - 日付や出来事の組み合わせで個人が特定されない
 - 第三者の個人情報が残っていない
 
-## AI返信について
+## 下書き補助について
 
-初期状態ではAI機能はOFFです。`OPENAI_API_KEY` が未設定でもサイトは動きます。
+初期状態では下書き補助はOFFです。`OPENAI_API_KEY` が未設定でもサイトは動きます。
 
-将来AIを追加する場合も、AIは管理者向けの下書き補助に限定してください。AI自動返信は禁止です。AI出力は必ず人間の管理者が確認・編集してから保存してください。
+将来、自動生成を追加する場合も、管理者向けの下書き補助に限定してください。自動返信は禁止です。出力は必ず人間の管理者が確認・編集してから保存してください。
 
-AIで将来想定している機能:
+将来想定している下書き補助:
 
 - 投稿要約
 - 返信案3パターン

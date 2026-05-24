@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { AdminReplyEditor } from "@/components/AdminReplyEditor";
 import { adminJsonFetch, verifyAdminSession } from "@/lib/adminSessionClient";
+import { urgencyLabel } from "@/lib/displayLabels";
 import type { Post, PublicPost } from "@/lib/types";
 
 export default function AdminPostDetailPage() {
@@ -57,13 +58,13 @@ export default function AdminPostDetailPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-5 sm:py-12">
       <div className="break-words rounded-lg border border-red-300/20 bg-red-950/10 p-4 text-sm leading-7 text-red-100">
-        原文を扱っています。本文を外部ログ、チャット、公開ページにそのまま貼らないでください。
+        原文を扱っています。本文を外部ログや公開ページにそのまま貼らないでください。
       </div>
       <section className="mt-6 min-w-0 overflow-hidden rounded-lg border border-white/10 bg-night-card p-4 sm:p-6">
         <div className="flex min-w-0 flex-wrap gap-2 text-sm leading-6 text-night-muted">
           <span className="break-words">{new Date(post.created_at).toLocaleString("ja-JP")}</span>
           <span className="break-words">{post.category}</span>
-          <span className="break-words">{post.urgency}</span>
+          <span className="break-words">{urgencyLabel(post.urgency)}</span>
           {post.nickname ? <span className="break-all">nickname: {post.nickname}</span> : null}
           {post.age_group ? <span className="break-words">{post.age_group}</span> : null}
         </div>

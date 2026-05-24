@@ -18,7 +18,7 @@ export default function HomePage() {
               悩みを送る
             </Link>
             <Link href="/archive" className="rounded-md border border-night-line px-5 py-3 text-center text-sm text-night-text transition hover:bg-white/[0.06]">
-              みんなの悩みを見る
+              公開アーカイブを読む
             </Link>
           </div>
         </div>
@@ -28,7 +28,7 @@ export default function HomePage() {
         {[
           ["原文は非公開", "投稿本文は管理者以外に表示されません。"],
           ["返信確認URL", "投稿後に表示される専用URLから、あとで返信を確認できます。"],
-          ["公開は許可制", "公開アーカイブには、公開を許可した投稿だけが並びます。"]
+          ["公開は確認後", "公開アーカイブには、投稿者が公開を希望し、管理者が確認した相談だけが並びます。"]
         ].map(([title, body]) => (
           <div key={title} className="min-w-0 rounded-lg border border-night-line bg-night-card p-4 sm:p-5">
             <h2 className="break-words font-semibold text-night-text">{title}</h2>

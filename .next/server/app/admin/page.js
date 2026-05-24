@@ -1,7 +1,7 @@
 var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/admin/page.js")
-R.c("server/chunks/ssr/[root-of-the-server]__1ruk6_a._.js")
-R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_0-4dvb-.js")
-R.c("server/chunks/ssr/[root-of-the-server]__1lqw8qv._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0x5lnfg._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_1osc12q.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0hs5gp8._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__1mcm5ot._.js")
 R.c("server/chunks/ssr/_1dqy1cs._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_client_components_0wpq8j3._.js")
@@ -10,5 +10,5 @@ R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthor
 R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_0q-w892.js")
 R.c("server/chunks/ssr/app_admin_layout_tsx_1moen81._.js")
 R.c("server/chunks/ssr/_next-internal_server_app_admin_page_actions_1mcickz.js")
-R.m(84016)
-module.exports=R.m(84016).exports
+R.m(33285)
+module.exports=R.m(33285).exports

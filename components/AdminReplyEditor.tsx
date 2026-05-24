@@ -82,7 +82,7 @@ export function AdminReplyEditor({
         })
       });
     } catch {
-      setStatus("公開用データを保存できませんでした。公開許可と入力内容を確認してください。");
+      setStatus("公開用データを保存できませんでした。公開希望と入力内容を確認してください。");
       return;
     }
 
@@ -91,7 +91,7 @@ export function AdminReplyEditor({
   }
 
   async function generateDraft() {
-    setStatus("AI下書きを生成中...");
+    setStatus("下書き補助を準備中...");
     const response = await fetch("/api/ai/draft", {
       method: "POST",
       headers: {
@@ -103,13 +103,13 @@ export function AdminReplyEditor({
 
     if (!response.ok) {
       const error = (await response.json().catch(() => null)) as { error?: string } | null;
-      setStatus(error?.error ?? "AI下書きを生成できませんでした。");
+      setStatus(error?.error ?? "下書き補助を使えませんでした。");
       return;
     }
 
     const data = (await response.json()) as DraftResponse;
     setDraft(data);
-    setStatus("AI下書きを生成しました。保存前に必ず管理者が確認してください。");
+    setStatus("下書き補助を作成しました。保存前に必ず管理者が確認してください。");
   }
 
   async function notifyReply() {
@@ -194,7 +194,7 @@ export function AdminReplyEditor({
             返信を保存
           </button>
           <button onClick={generateDraft} disabled={!aiEnabled} className={adminButtonClass}>
-            {aiEnabled ? "AI下書き生成" : "AI機能は未設定"}
+            {aiEnabled ? "下書き補助を作る" : "下書き補助は未設定"}
           </button>
           <button
             onClick={notifyReply}
@@ -258,7 +258,7 @@ export function AdminReplyEditor({
 
       {draft ? (
         <section className="min-w-0 space-y-4 overflow-hidden rounded-lg border border-white/10 bg-night-card p-4 sm:p-6 lg:col-span-2">
-          <h2 className="break-words text-xl font-semibold">AI下書き</h2>
+          <h2 className="break-words text-xl font-semibold">下書き補助</h2>
           {(draft.riskLevel === "high" || draft.riskLevel === "critical") ? <SafetyNotice compact riskLevel={draft.riskLevel} /> : null}
           <div className="grid gap-4 lg:grid-cols-2">
             <DraftBlock title="要約" body={draft.summary} />
