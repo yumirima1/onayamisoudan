@@ -3,6 +3,7 @@ import { createServerSupabase } from "@/lib/supabaseServer";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { createReplyToken, hashReplyToken } from "@/lib/replyToken";
 import { submitPostSchema } from "@/lib/validation";
+import { notifyDiscordNewPost } from "@/lib/discord";
 
 export async function POST(request: NextRequest) {
   const forwardedFor = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
@@ -27,13 +28,31 @@ export async function POST(request: NextRequest) {
   const baseUrl = process.env.APP_BASE_URL ?? request.nextUrl.origin;
   const replyUrl = `${baseUrl.replace(/\/$/, "")}/reply/${replyToken}`;
   const { website, ...postData } = parsed.data;
-  const { error } = await supabase.from("posts").insert({
-    ...postData,
-    reply_token_hash: hashReplyToken(replyToken)
-  });
+  const { data: insertedPost, error } = await supabase
+    .from("posts")
+    .insert({
+      ...postData,
+      reply_token_hash: hashReplyToken(replyToken)
+    })
+    .select("id")
+    .single();
 
-  if (error) {
+  if (error || !insertedPost) {
     return NextResponse.json({ error: "送信できませんでした。少し時間を置いてもう一度お試しください。" }, { status: 500 });
+  }
+
+  const adminUrl = `${baseUrl.replace(/\/$/, "")}/admin/posts/${insertedPost.id}`;
+
+  try {
+    await notifyDiscordNewPost({
+      title: postData.title,
+      category: postData.category,
+      urgency: postData.urgency,
+      allowPublic: postData.allow_public,
+      adminUrl
+    });
+  } catch (discordError) {
+    console.error("Failed to send Discord new post notification", discordError);
   }
 
   return NextResponse.json({ ok: true, replyUrl }, { status: 201 });
