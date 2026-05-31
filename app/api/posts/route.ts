@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import { createServerSupabase } from "@/lib/supabaseServer";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { createReplyToken, hashReplyToken } from "@/lib/replyToken";
@@ -24,24 +25,22 @@ export async function POST(request: NextRequest) {
   }
 
   const supabase = createServerSupabase();
+  const postId = randomUUID();
   const replyToken = createReplyToken();
   const baseUrl = process.env.APP_BASE_URL ?? request.nextUrl.origin;
   const replyUrl = `${baseUrl.replace(/\/$/, "")}/reply/${replyToken}`;
   const { website, ...postData } = parsed.data;
-  const { data: insertedPost, error } = await supabase
-    .from("posts")
-    .insert({
-      ...postData,
-      reply_token_hash: hashReplyToken(replyToken)
-    })
-    .select("id")
-    .single();
+  const { error } = await supabase.from("posts").insert({
+    id: postId,
+    ...postData,
+    reply_token_hash: hashReplyToken(replyToken)
+  });
 
-  if (error || !insertedPost) {
+  if (error) {
     return NextResponse.json({ error: "送信できませんでした。少し時間を置いてもう一度お試しください。" }, { status: 500 });
   }
 
-  const adminUrl = `${baseUrl.replace(/\/$/, "")}/admin/posts/${insertedPost.id}`;
+  const adminUrl = `${baseUrl.replace(/\/$/, "")}/admin/posts/${postId}`;
 
   try {
     await notifyDiscordNewPost({
